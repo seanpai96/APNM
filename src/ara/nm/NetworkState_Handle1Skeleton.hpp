@@ -1,7 +1,8 @@
 #include "com/fakecom.hpp"
 #include "core/result.h"
 #include "core/instance_specifier.h"
-#include "future.h"
+#include "core/future.h"
+#include "NetworkStateType.hpp"
 
 namespace ara {
     namespace nm {
@@ -64,14 +65,29 @@ namespace ara {
                 fields::NetworkRequestedState NetworkRequestedState;
             };
 
-            //fields
             namespace fields {
                 class NetworkCurrentState {
+                    public:
+                    using FieldType = NetworkStateType;
 
+                    ara::core::Result<void> Update(const FieldType& data);
+                    ara::core::Result<void> RegisterGetHandler(
+                        std::function<ara::core::Future<FieldType>()> getHandler
+                    );
+                    //RegisterSetHalder isn't available here since NetworkCurrentState has no setter
                 };
 
                 class NetworkRequestedState {
+                    public:
+                    using FieldType = NetworkStateType;
 
+                    ara::core::Result<void> Update(const FieldType& data);
+                    ara::core::Result<void> RegisterGetHandler(
+                        std::function<ara::core::Future<FieldType>()> getHandler
+                    );
+                    ara::core::Result<void> RegisterSetHandler(
+                        std::function<ara::core::Future<FieldType>(const FieldType& data)> setHandler
+                    );
                 };
             }
         }
