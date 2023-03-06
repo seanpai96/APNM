@@ -4,6 +4,8 @@
 #include "core/future.h"
 #include "NetworkStateType.hpp"
 
+#include <vector>
+
 namespace ara {
     namespace nm {
         namespace skeleton {
@@ -88,6 +90,9 @@ namespace ara {
                     ara::core::Result<void> RegisterSetHandler(
                         std::function<ara::core::Future<FieldType>(const FieldType& data)> setHandler
                     );
+
+                    private:
+                    std::vector<std::function<ara::core::Future<FieldType>(const FieldType* data)>> setHandlers;
                 };
             }
         }
