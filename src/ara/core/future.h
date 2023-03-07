@@ -10,11 +10,11 @@ namespace ara {
         class Promise: public std::promise<T> {
             public:
             Future<T, E> get_future() {
-                return Future(std::promise<T>::get_future());
+                return Future<T, E>(std::promise<T>::get_future());
             }
         };
 
-        template<typename T, typename E = ErrorCode>
+        template<typename T, typename E>
         class Future {
             friend Promise<T, E>;
             

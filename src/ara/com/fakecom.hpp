@@ -1,4 +1,4 @@
-#include "core/vector.h"
+#include "../core/vector.h"
 namespace ara {
     namespace com {
         //[SWS_CM_00302], used by NM skeletons

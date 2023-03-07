@@ -3,67 +3,61 @@
 
 //com impelementaitons are minimized, most of them are ignored
 //These content should be generated, but sadly we don't have a generator
-using ara::nm::skeleton::NetworkState_Handle1Sketelon;
+using ara::nm::skeleton::NetworkState_Handle1Skeleton;
 //constructors
-NetworkState_Handle1Sketelon::NetworkState_Handle1Sketelon(
+NetworkState_Handle1Skeleton::NetworkState_Handle1Skeleton(
     ara::com::InstanceIdentifier instanceId,
-    ara::com::MethodCallProcessingMode mode = 
-    ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) { }
 
-NetworkState_Handle1Sketelon::NetworkState_Handle1Sketelon(
+NetworkState_Handle1Skeleton::NetworkState_Handle1Skeleton(
     ara::com::InstanceIdentifierContainer instanceIds,
-    ara::com::MethodCallProcessingMode mode =
-    ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) { }
 
-NetworkState_Handle1Sketelon::NetworkState_Handle1Sketelon(
+NetworkState_Handle1Skeleton::NetworkState_Handle1Skeleton(
     ara::core::InstanceSpecifier instanceSpec,
-    ara::com::MethodCallProcessingMode mode =
-        ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) { }
 
-ara::core::Result<NetworkState_Handle1Sketelon> NetworkState_Handle1Sketelon::Create(
+ara::core::Result<NetworkState_Handle1Skeleton> NetworkState_Handle1Skeleton::Create(
     const ara::com::InstanceIdentifier &instanceID,
-    ara::com::MethodCallProcessingMode mode =
-        ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle1Sketelon>(
-        NetworkState_Handle1Sketelon(instanceID, mode)
+    return ara::core::Result<NetworkState_Handle1Skeleton>(
+            NetworkState_Handle1Skeleton(instanceID, mode)
     );
 }
 
-ara::core::Result<NetworkState_Handle1Sketelon> Create(
+ara::core::Result<NetworkState_Handle1Skeleton> Create(
     const ara::com::InstanceIdentifierContainer &instanceIDs,
-    ara::com::MethodCallProcessingMode mode =
-        ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle1Sketelon>(
-        NetworkState_Handle1Sketelon(instanceIDs, mode)
+    return ara::core::Result<NetworkState_Handle1Skeleton>(
+            NetworkState_Handle1Skeleton(instanceIDs, mode)
     );
 }
 
-ara::core::Result<NetworkState_Handle1Sketelon> Create(
+ara::core::Result<NetworkState_Handle1Skeleton> Create(
     const ara::core::InstanceSpecifier &instanceSpec,
-    ara::com::MethodCallProcessingMode mode =
-        ara::com::MethodCallProcessingMode::kEvent
+    ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle1Sketelon>(
-        NetworkState_Handle1Sketelon(instanceSpec, mode)
+    return ara::core::Result<NetworkState_Handle1Skeleton>(
+            NetworkState_Handle1Skeleton(instanceSpec, mode)
     );
 }
 
-ara::nm::skeleton::NetworkState_Handle1Sketelon::~NetworkState_Handle1Sketelon() { }
+ara::nm::skeleton::NetworkState_Handle1Skeleton::~NetworkState_Handle1Skeleton() { }
 
-ara::core::Result<void> NetworkState_Handle1Sketelon::OfferService() {
+ara::core::Result<void> NetworkState_Handle1Skeleton::OfferService() {
     //By AUTOSAR_EXP_ARAComAPI 5.4.8.3, OfferService should return error if there's any field without SetHandler
     //Here the check is ignored, since it's an ara::com feature, rather than ara::nm
     return ara::core::Result<void>();
 }
 
-void NetworkState_Handle1Sketelon::StopOfferService() { }
+void NetworkState_Handle1Skeleton::StopOfferService() { }
 
-ara::core::Future<bool> NetworkState_Handle1Sketelon::ProcessNextMethodCall() { 
+ara::core::Future<bool> NetworkState_Handle1Skeleton::ProcessNextMethodCall() {
     auto promise = ara::core::Promise<bool>();
     //always return false here, we only use kEvent mode
     promise.set_value(false);
@@ -115,6 +109,7 @@ ara::core::Result<void> NetworkRequestedState::RegisterSetHandler(
 ) {
     //we need to implement this since SetHandler is mandatory, and we're going to use Set Handler in skeleton implementation
     //AUTOSAR_EXP_ARAComAPI 5.4.8.2
+    setHandlers.emplace_back(setHandler);
     setHandlers.emplace_back(setHandler);
     return ara::core::Result<void>();
 }

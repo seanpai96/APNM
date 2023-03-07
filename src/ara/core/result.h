@@ -1,4 +1,5 @@
 #include "error_code.h"
+
 namespace ara {
     namespace core {
         //[SWS_CORE_00701], used by NM skeletons
@@ -9,7 +10,7 @@ namespace ara {
             Result(T &&t): result{t} {}
 
             private:
-            T result;
+            T& result;
         };
 
         //partial specialized Result
