@@ -1,3 +1,6 @@
+#ifndef ARA_NM_NETWORK_STATE_HANDLE_1_SKELETON_H_
+#define ARA_NM_NETWORK_STATE_HANDLE_1_SKELETON_H_
+
 #include "../com/fakecom.hpp"
 #include "../core/result.h"
 #include "../core/instance_specifier.h"
@@ -101,3 +104,5 @@ namespace ara {
         }
     }
 }
+
+#endif

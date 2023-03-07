@@ -1,3 +1,6 @@
+#ifndef ARA_CORE_VECTOR_H_
+#define ARA_CORE_VECTOR_H_
+
 #include <vector>
 namespace ara {
     namespace core {
@@ -6,3 +9,5 @@ namespace ara {
         using Vector = std::vector<T, Allocator>;
     }
 }
+
+#endif

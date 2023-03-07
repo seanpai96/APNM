@@ -1,3 +1,6 @@
+#ifndef ARA_COM_FAKECOM_H_
+#define ARA_COM_FAKECOM_H_
+
 #include "../core/vector.h"
 namespace ara {
     namespace com {
@@ -13,3 +16,5 @@ namespace ara {
         enum class MethodCallProcessingMode { kPoll, kEvent, kEventSingleThread };
     }
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef ARA_CORE_RESULT_H_
+#define ARA_CORE_RESULT_H_
+
 #include "error_code.h"
 
 namespace ara {
@@ -23,3 +26,5 @@ namespace ara {
         };
     }
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef ARA_CORE_FUTURE_H_
+#define ARA_CORE_FUTURE_H_
+
 #include "error_code.h"
 #include <future>
 namespace ara {
@@ -24,3 +27,5 @@ namespace ara {
         };
     }
 }
+
+#endif
