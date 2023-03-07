@@ -5,6 +5,7 @@
 #include "NetworkStateType.hpp"
 
 #include <vector>
+#include <functional>
 
 namespace ara {
     namespace nm {
