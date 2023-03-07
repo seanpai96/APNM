@@ -29,7 +29,7 @@ ara::core::Result<NetworkState_Handle1Skeleton> NetworkState_Handle1Skeleton::Cr
     );
 }
 
-ara::core::Result<NetworkState_Handle1Skeleton> Create(
+ara::core::Result<NetworkState_Handle1Skeleton> NetworkState_Handle1Skeleton::Create(
     const ara::com::InstanceIdentifierContainer &instanceIDs,
     ara::com::MethodCallProcessingMode mode
 ) noexcept {
@@ -38,7 +38,7 @@ ara::core::Result<NetworkState_Handle1Skeleton> Create(
     );
 }
 
-ara::core::Result<NetworkState_Handle1Skeleton> Create(
+ara::core::Result<NetworkState_Handle1Skeleton> NetworkState_Handle1Skeleton::Create(
     const ara::core::InstanceSpecifier &instanceSpec,
     ara::com::MethodCallProcessingMode mode
 ) noexcept {
@@ -109,7 +109,6 @@ ara::core::Result<void> NetworkRequestedState::RegisterSetHandler(
 ) {
     //we need to implement this since SetHandler is mandatory, and we're going to use Set Handler in skeleton implementation
     //AUTOSAR_EXP_ARAComAPI 5.4.8.2
-    setHandlers.emplace_back(setHandler);
     setHandlers.emplace_back(setHandler);
     return ara::core::Result<void>();
 }

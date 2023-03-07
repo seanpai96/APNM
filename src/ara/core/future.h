@@ -19,8 +19,8 @@ namespace ara {
             friend Promise<T, E>;
             
             private:
-            std::future<T> future;
-            Future(std::future<T> result_future): future{result_future} { }
+            std::future<T> &future;
+            Future(std::future<T> &&result_future): future{result_future} { }
         };
     }
 }
