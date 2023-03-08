@@ -22,6 +22,7 @@ namespace ara {
             void StopInstance();
             void Tick();
             void Reset();
+            NMInstanceState GetState() { return state; }
 
            private:
             int _ticks = 0;
@@ -36,6 +37,7 @@ namespace ara {
             int nmImmediateCycleTimerTicks = 0;
             int immediateCycleTimes = 0;
             int nmWaitBusSleepTimerTicks = 0;
+            void RestartTimeoutTimer();
 
         };
 
@@ -67,11 +69,16 @@ namespace ara {
             nmWaitBusSleepTimerTicks = 0;
         }
 
+        void NMInstance::RestartTimeoutTimer(){
+            isNmTimeoutTimerRunning = true;
+            nmTimeoutTimerTicks = 0;
+        }
+
         void NMInstance::Tick() {
             _ticks++;
             if(state == NMInstanceState::NM_STATE_INIT){
                 return;
-            }else if(state == NMInstanceState::NM_STATE_BUS_SLEEP){
+            }else if(state == NMInstanceState::NM_STATE_BUS_SLEEP){                             //bus sleep
                 if(networkState.RequestNetworkState == NetworkStateType::kFullCom){
                     //network requested, enter network mode
                     state = NMInstanceState::NM_STATE_REPEAT_MESSAGE;
@@ -81,7 +88,8 @@ namespace ara {
                     nmImmediateCycleTimerTicks = 0;
                     immediateCycleTimes = cluster.nmImmediateNmTransmissions;
                 }
-            }else if(state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP){
+                //bus sleep finish
+            }else if(state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP){                     //prepare bus sleep
                 if(networkState.RequestNetworkState == NetworkStateType::kFullCom){
                     //network requested, enter network mode
                     state = NMInstanceState::NM_STATE_REPEAT_MESSAGE;
@@ -100,25 +108,29 @@ namespace ara {
                         nmWaitBusSleepTimerTicks++;
                     }
                 }
-            }else if(state == NMInstanceState::NM_STATE_REPEAT_MESSAGE){
+                //prepare bus sleep finish
+            }else if(state == NMInstanceState::NM_STATE_REPEAT_MESSAGE){                        //repeat message
                 if(isNmImmediateCycleTimerRunning){
                     if(immediateCycleTimes <= 0){
-                        //immediate cycle times used up, start repeat message timer
+                        //immediate cycle times used up, start repeat message timer and message cycle timer
                         isNmImmediateCycleTimerRunning = false;
                         isNmRepeatMessageTimerRunning = true;
+                        isNmMsgCycleTimerRunning = true;
                         nmImmediateCycleTimerTicks = 0;
                         nmRepeatMessageTimerTicks = 0;
+                        nmMsgCycleTimerTicks = 0;
                     }else{
                         if(nmImmediateCycleTimerTicks >= cluster.nmImmediateNmCycleTime){
                             //send immediate message
-                            node.SendImmediateMessage();
+                            node.SendNmMessage();
+                            RestartTimeoutTimer();          //message sent, restart timeout timer
                             immediateCycleTimes--;
                             nmImmediateCycleTimerTicks = 0;
                         }else{
                             nmImmediateCycleTimerTicks++;
                         }
                     }
-                }if(isNmRepeatMessageTimerRunning){
+                }else if(isNmRepeatMessageTimerRunning){
                     if(nmRepeatMessageTimerTicks >= cluster.nmRepeatMessageTime){
                         //repeat message timeout, check request network state
                         isNmRepeatMessageTimerRunning = false;
@@ -133,14 +145,92 @@ namespace ara {
                             state = NMInstanceState::NM_STATE_NORMAL_OPERATION;
 
                         }
-                    }else if(nmMsgCycleTimerTicks >= cluster.nmMsgCycleTime){
-                        //send repeat message
-                        node.SendRepeatMessage();
+                    }else{
+                        nmRepeatMessageTimerTicks++;
+                        if(isNmMsgCycleTimerRunning){
+                            if(nmMsgCycleTimerTicks >= cluster.nmMsgCycleTime){
+                                //send repeat message
+                                node.SendNmMessage();  // message sent, restart timeout timer
+                                RestartTimeoutTimer();
+                                nmMsgCycleTimerTicks = 0;
+                            }else{
+                                nmMsgCycleTimerTicks++;
+                            }
+                        }
+                    }
+                    
+                }
+                if(isNmTimeoutTimerRunning){
+                    if(nmTimeoutTimerTicks >= cluster.nmTimeoutTime){
+                        RestartTimeoutTimer();
+                    }else{
+                        nmTimeoutTimerTicks++;
+                    }
+                }
+                //repeat message finish
+            }else if(state == NMInstanceState::NM_STATE_NORMAL_OPERATION){                      //normal operation
+                if(networkState.RequestNetworkState == NetworkStateType::kNoCom){
+                    //network not requested, enter ready sleep state
+                    state = NMInstanceState::NM_STATE_READY_SLEEP;
+                    isNmMsgCycleTimerRunning = false;
+                    nmMsgCycleTimerTicks = 0;
+                }else if(isNmMsgCycleTimerRunning){
+                    if(nmMsgCycleTimerTicks >= cluster.nmMsgCycleTime){
+                        //send Nm message
+                        node.SendNmMessage();  // message sent, restart timeout timer
+                        RestartTimeoutTimer();
                         nmMsgCycleTimerTicks = 0;
                     }else{
                         nmMsgCycleTimerTicks++;
                     }
                 }
+                if(isNmTimeoutTimerRunning){
+                    if(nmTimeoutTimerTicks >= cluster.nmTimeoutTime){
+                        RestartTimeoutTimer();
+                    }else{
+                        nmTimeoutTimerTicks++;
+                    }
+                }
+                //normal operation finish
+            }else if(state == NMInstanceState::NM_STATE_READY_SLEEP){
+                if(networkState.RequestNetworkState == NetworkStateType::kFullCom){
+                    //network requested, enter normal operation state
+                    state = NMInstanceState::NM_STATE_NORMAL_OPERATION;
+                    isNmMsgCycleTimerRunning = true;
+                    nmMsgCycleTimerTicks = 0;
+                }else if(isNmTimeoutTimerRunning){
+                    if(nmTimeoutTimerTicks >= cluster.nmTimeoutTime){
+                        //timeout, enter prepare bus sleep state
+                        state = NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP;
+                        isNmTimeoutTimerRunning = false;
+                        nmTimeoutTimerTicks = 0;
+                        isNmWaitBusSleepTimerRunning = true;
+                        nmWaitBusSleepTimerTicks = 0;
+                    }else{
+                        nmTimeoutTimerTicks++;
+                    }
+                }
+                //ready sleep finish
+            }else if(state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP){                     //prepare bus sleep
+                if(networkState.RequestNetworkState == NetworkStateType::kFullCom){
+                    //network requested, enter repeat message state
+                    state = NMInstanceState::NM_STATE_REPEAT_MESSAGE;
+                    isNmImmediateCycleTimerRunning = true;
+                    isNmTimeoutTimerRunning = true;
+                    nmTimeoutTimerTicks = 0;
+                    nmImmediateCycleTimerTicks = 0;
+                    immediateCycleTimes = cluster.nmImmediateNmTransmissions;
+                }else if(isNmWaitBusSleepTimerRunning){
+                    if(nmWaitBusSleepTimerTicks >= cluster.nmWaitBusSleepTime){
+                        //wait bus sleep timeout, enter bus sleep mode
+                        state = NMInstanceState::NM_STATE_BUS_SLEEP;
+                        isNmWaitBusSleepTimerRunning = false;
+                        nmWaitBusSleepTimerTicks = 0;
+                    }else{
+                        nmWaitBusSleepTimerTicks++;
+                    }
+                }
+                //prepare bus sleep finish
             }
         }
     }  // namespace nm
