@@ -4,7 +4,9 @@
 #include <functional>
 
 class IStateMachine {
+public:
     virtual void StartInstance(std::function<void(bool)> onStateChangeToNetwork);
+    virtual void StopInstance();
     virtual void setRequested(bool requested);
 };
 
