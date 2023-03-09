@@ -5,8 +5,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include <fcntl.h>
+#include <errno.h>
+#include <stdio.h>
+#include <netdb.h>
+#include <assert.h>
+#include <string.h>
+#include <ctime>
 
-using namespace std;
 
 //todo : call broacast addr
 //todo : package fix
@@ -20,12 +26,12 @@ class Socket{
     int setServerAndBind(){
         sock_Server = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         if (sock_Server < 0) {
-            cerr << "socket creation failed" << endl;
+            std::cerr << "socket creation failed" << std::endl;
             return 0;
         }
         if(setsockopt(sock_Server, SOL_SOCKET, SO_BROADCAST, (const char*)&broadcast, sizeof(broadcast)) < 0)
         {
-            cerr << "socket creation failed" << endl;
+            std::cerr << "socket creation failed" << std::endl;
             return 0;
         }
         memset(&server_Addr, 0, sizeof(server_Addr));
@@ -40,17 +46,18 @@ class Socket{
         strcpy(buf, "twireshark\n");
         unsigned slen=sizeof(sockaddr);
         sendto(sock_Server,buf,strlen(buf)-1,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
+        return 1;
     }
     int setClientAndBind(){
         sock_Client = socket(AF_INET, SOCK_DGRAM, 0);
         fcntl(sock_Client, F_SETFL, O_NONBLOCK);
         if (sock_Client < 0) {
-            cerr << "socket creation failed" << endl;
+            std::cerr << "socket creation failed" << std::endl;
             return 0;
         }
         if(setsockopt(sock_Client, SOL_SOCKET, SO_REUSEADDR, (const char*)&broadcast, sizeof(broadcast)) < 0)
         {
-            cerr << "socket set failed" << endl;
+            std::cerr << "socket set failed" << std::endl;
             return 0;
         }
         sockaddr_in client_Addr;
@@ -58,11 +65,11 @@ class Socket{
         client_Addr.sin_family = AF_INET;
         client_Addr.sin_addr.s_addr = htonl(INADDR_ANY);
         client_Addr.sin_port = htons(port);
-        //cout << "Binding to " << inet_ntoa(client_Addr.sin_addr) << ":" << ntohs(client_Addr.sin_port) << endl;
+        //std::cout << "Binding to " << inet_ntoa(client_Addr.sin_addr) << ":" << ntohs(client_Addr.sin_port) << std::endl;
 
         if (bind(sock_Client, (struct sockaddr *) &client_Addr, sizeof(client_Addr)) < 0) { // 绑定套接字
-            cerr << "bind failed"<< strerror(errno) << endl;
-            closeSocket();
+            std::cerr << "bind failed"<< strerror(errno) << std::endl;
+            closeClientSocket();
             return 0;
         }
         return 1;
@@ -78,13 +85,13 @@ class Socket{
             return 1;
         }
     }
-    int closeClientSocket(){
+    void closeClientSocket(){
         close(sock_Client);
     }
-    int closeServerSocket(){
+    void closeServerSocket(){
         close(sock_Server);
     }
-    int setPort(int expect){
+    void setPort(int expect){
         port = expect;
     }
-}
+};
