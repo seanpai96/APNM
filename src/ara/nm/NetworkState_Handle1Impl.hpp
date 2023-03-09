@@ -3,10 +3,9 @@
 #include "../core/result.h"
 #include "IStateMachine.hpp"
 
-#include <thread>
 #include <functional>
 
-struct MachineThread;
+struct Machine;
 
 namespace ara {
     namespace nm {
@@ -45,8 +44,7 @@ namespace ara {
     }
 }
 
-struct MachineThread {
-    std::thread thread;
+struct Machine {
     IStateMachine machine;
     ara::nm::NetworkState_Handle1Impl *handle;
 

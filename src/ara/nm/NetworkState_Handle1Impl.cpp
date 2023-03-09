@@ -1,7 +1,5 @@
 #include "NetworkState_Handle1Impl.hpp"
 
-#include "../core/vector.h"
-
 using ara::nm::NetworkState_Handle1Impl;
 
 NetworkState_Handle1Impl::NetworkState_Handle1Impl(
@@ -22,12 +20,11 @@ NetworkState_Handle1Impl::NetworkState_Handle1Impl(
     initialize();
 }
 
-ara::core::Vector<MachineThread> machineThreads;
+ara::core::Vector<Machine> machineThreads;
 
 NetworkState_Handle1Impl::~NetworkState_Handle1Impl() {
     for (auto &machineThread: machineThreads) {
         machineThread.machine.StopInstance();
-        machineThread.thread.join();
     }
 }
 
@@ -52,15 +49,14 @@ int NetworkState_Handle1Impl::getEthernetConnectorNumber() {
 void NetworkState_Handle1Impl::initialize() {
     NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
     for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
-        machineThreads.emplace_back(MachineThread{
+        machineThreads.emplace_back(Machine{
                 .machine = createMachine(),
                 .handle = this
         });
     }
 
     for (auto &machineThread: machineThreads) {
-        machineThread.thread = std::thread(&IStateMachine::StartInstance, &machineThread.machine,
-                                           machineThread.machineStateChangeCallback);
+        machineThread.machine.StartInstance(machineThread.machineStateChangeCallback);
     }
 
     OfferService();
