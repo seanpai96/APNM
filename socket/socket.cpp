@@ -65,7 +65,7 @@ public:
         memset(&client_Addr, 0, sizeof(client_Addr));
         client_Addr.sin_family = AF_INET;
         client_Addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        // client_Addr.sin_addr.s_addr = inet_addr("127.0.0.1"); // 设置 IP 地址为本地任意地址
+        // client_Addr.sin_addr.s_addr = inet_addr("127.0.0.1");
         client_Addr.sin_port = htons(port);
         //std::cout << "Binding to " << inet_ntoa(client_Addr.sin_addr) << ":" << ntohs(client_Addr.sin_port) << std::endl;
 
