@@ -19,8 +19,8 @@ namespace ara {
             Socket socket;
 
            public:
-            NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster);
-            void StartInstance(std::function<void(bool)> &onStateChangeToNetwork);
+            NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork);
+            void StartInstance();
             void StopInstance();
             void setRequested(bool requested);
             void Reset();
@@ -45,16 +45,15 @@ namespace ara {
             void Tick();
         };
 
-        NMInstance::NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster)
-            : handle(handle), node(node), cluster(cluster) {
+        NMInstance::NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork)
+            : handle(handle), node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
             // TODO : init socket
         }
 
-        void NMInstance::StartInstance(std::function<void(bool)> &onStateChangeToNetwork) {
+        void NMInstance::StartInstance() {
             this->Reset();
             state = NMInstanceState::NM_STATE_BUS_SLEEP;
             timer.start(1000, [this]() { this->Tick(); });
-            this->onStateChangeToNetwork = onStateChangeToNetwork;
         }
 
         void NMInstance::StopInstance() {
