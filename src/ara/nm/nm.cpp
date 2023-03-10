@@ -2,6 +2,7 @@
 
 #include <bits/stdc++.h>
 
+#include "../../../include/prototype.h"
 #include "../../../socket/socket.cpp"
 #include "CallbackTimer.cpp"
 #include "IStateMachine.hpp"
@@ -10,7 +11,6 @@
 namespace ara {
     namespace nm {
         class NMInstance : public IStateMachine {
-            NMNetworkHandle &handle;
             UdpNmNode &node;
             UdpNmCluster &cluster;
             CallbackTimer timer;
@@ -19,7 +19,7 @@ namespace ara {
             Socket socket;
 
            public:
-            NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork);
+            NMInstance(UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork);
             void StartInstance();
             void StopInstance();
             void setRequested(bool requested);
@@ -45,8 +45,8 @@ namespace ara {
             void Tick();
         };
 
-        NMInstance::NMInstance(NMNetworkHandle &handle, UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork)
-            : handle(handle), node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
+        NMInstance::NMInstance(UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork)
+            : node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
             // TODO : init socket
         }
 
@@ -182,7 +182,7 @@ namespace ara {
                     }
                 }
                 if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster.nmTimeoutTime) {
+                    if (nmTimeoutTimerTicks >= cluster.nmNetworkTimeout) {
                         RestartTimeoutTimer();
                     } else {
                         nmTimeoutTimerTicks++;
@@ -206,7 +206,7 @@ namespace ara {
                     }
                 }
                 if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster.nmTimeoutTime) {
+                    if (nmTimeoutTimerTicks >= cluster.nmNetworkTimeout) {
                         RestartTimeoutTimer();
                     } else {
                         nmTimeoutTimerTicks++;
@@ -220,7 +220,7 @@ namespace ara {
                     isNmMsgCycleTimerRunning = true;
                     nmMsgCycleTimerTicks = 0;
                 } else if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster.nmTimeoutTime) {
+                    if (nmTimeoutTimerTicks >= cluster.nmNetworkTimeout) {
                         // timeout, enter prepare bus sleep state
                         onStateChangeToNetwork(false);
                         state = NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP;
