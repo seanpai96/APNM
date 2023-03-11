@@ -1,5 +1,5 @@
 #include "NetworkState_Handle0Skeleton.hpp"
-
+#include "../com/com_set_handler.hpp"
 
 //com impelementaitons are minimized, most of them are ignored
 //These content should be generated, but sadly we don't have a generator
@@ -109,6 +109,10 @@ ara::core::Result<void> NetworkRequestedState::RegisterSetHandler(
 ) {
     //we need to implement this since SetHandler is mandatory, and we're going to use Set Handler in skeleton implementation
     //AUTOSAR_EXP_ARAComAPI 5.4.8.2
-    setHandlers.emplace_back(setHandler);
+    //here we just put the handler into a global map, the real ara::com implementation should replace this
+    if (handlers.find(this) == handlers.end()) {
+        handlers[this] = {};
+    }
+    handlers[this].emplace_back(setHandler);
     return ara::core::Result<void>();
 }

@@ -40,9 +40,6 @@ namespace ara {
                     ara::core::Result<void> RegisterSetHandler(
                             std::function<ara::core::Future<FieldType>(const FieldType& data)> setHandler
                     );
-
-                private:
-                    ara::core::Vector<std::function<ara::core::Future<FieldType>(const FieldType& data)>> setHandlers;
                 };
             }
 
