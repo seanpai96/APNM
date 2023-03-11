@@ -91,7 +91,7 @@ class UdpNmCluster : public NmCluster{
         int nmUserDataLength;                   //Defines the length in bytes of the user data contained in the Nm message
         unsigned int nmUserDataOffset;          //Specifies the offset (in bytes) of the user data information in the NM message
         TimeValue nmWaitBusSleepTime;           //Timeout for bus calm down phase in seconds
-        vector<EthernetPhysicalChannel> vlan;   //Reference to vlan
+        EthernetPhysicalChannel vlan;           //Reference to vlan
 };
 
 class NmConfig{
