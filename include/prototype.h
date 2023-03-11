@@ -1,5 +1,19 @@
+/*              header guard                */
+#ifndef _VECTOR_H_
+#define _VECTOR_H_ 1
+
 #include <vector>
+
+#endif
+
+#ifndef _STRING_H_
+#define _STRING_H_ 1
+
 #include <string>
+
+#endif
+
+
 using namespace std;
 
 typedef uint32_t TimeValue;                 
@@ -58,7 +72,7 @@ class NmNode{                                   //this is abstract alse, as NmCl
 class UdpNmNode : public NmNode{
     public:
         bool allNmMessagesKeepAwake;            //Specifies if Nm drops irrelevant NM PDUs
-        EtheretConmmunicationConnector communicationConnector;
+        EtheretConmmunicationConnector* communicationConnector; 
         TimeValue nmMsgCycleOffset;              //Node specific time offset in the periodic transmission node
 };
 
@@ -103,7 +117,7 @@ class NmConfig{
 class NmNetworkHandle{
     public:
         vector<PncMappingIdent> partialNetwork;         //reference to a pnc that included in this handle
-        vector<EtheretConmmunicationConnector> vlan;    //reference to a vlan that included in this handle
+        vector<EtheretConmmunicationConnector*> vlan;   //reference to vlan that included in this handle, use pointer type to identify
 };
 
 class NmInstantiation{
