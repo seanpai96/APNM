@@ -1,3 +1,6 @@
+#ifndef ARA_NM_NM_H_
+#define ARA_NM_NM_H_
+
 
 #include <cstdint>
 
@@ -13,3 +16,5 @@ namespace ara{
         };
     }
 }
+
+#endif
