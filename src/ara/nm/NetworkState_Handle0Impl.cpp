@@ -1,0 +1,79 @@
+#include "NetworkState_Handle0Impl.hpp"
+#include "nm.cpp"
+#include "NmConfigReader.hpp"
+
+using ara::nm::NetworkState_Handle0Impl;
+
+NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+    ara::com::InstanceIdentifier instanceIdentifier
+): NetworkState_Handle0Skeleton(instanceIdentifier, ara::com::MethodCallProcessingMode::kEventSingleThread) {
+    initialize();
+}
+
+NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+    ara::com::InstanceIdentifierContainer instanceIds
+): NetworkState_Handle0Skeleton(instanceIds, ara::com::MethodCallProcessingMode::kEventSingleThread) {
+    initialize();
+}
+
+NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+    ara::core::InstanceSpecifier instanceSpec
+): NetworkState_Handle0Skeleton(instanceSpec, ara::com::MethodCallProcessingMode::kEventSingleThread) {
+    initialize();
+}
+
+ara::core::Vector<Machine> machines;
+
+NetworkState_Handle0Impl::~NetworkState_Handle0Impl() {
+    for (auto &machineThread: machines) {
+        machineThread.stateMachine.StopInstance();
+    }
+}
+
+ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara::nm::NetworkStateType newValue) {
+    for (auto &machineThread: machines) {
+        machineThread.stateMachine.setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
+    }
+    //no need to check, the validity is guaranteed by enum NetworkStateType
+    auto promise = ara::core::Promise<ara::nm::NetworkStateType>();
+    promise.set_value(newValue);
+    return promise.get_future();
+}
+
+IStateMachine NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector connector, std::function<void(bool)> &onStateChangeToNetwork) {
+    auto &node = NmConfigReader::instance[connector];
+    auto &cluster = NmConfigReader::instance[node];
+    return ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
+}
+
+int NetworkState_Handle0Impl::getEthernetConnectorNumber() {
+    return handle.vlan.size();
+}
+
+void NetworkState_Handle0Impl::initialize() {
+    NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
+    for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
+        machines.emplace_back(Machine{
+                .handle = this
+        });
+        auto &last = machines.back();
+        last.stateMachine = createMachine(handle.vlan[i], last.machineStateChangeCallback);
+    }
+
+    for (auto &machine: machines) {
+        machine.stateMachine.StartInstance();
+    }
+
+    OfferService();
+}
+
+void NetworkState_Handle0Impl::updateNetworkCurrentState() {
+    auto targetState = NetworkStateType::kFullCom;
+    for (auto &machineThread: machines) {
+        if (!machineThread.machineInNetworkMode) {
+            targetState = NetworkStateType::kNoCom;
+            break;
+        }
+    }
+    NetworkCurrentState.Update(targetState);
+}

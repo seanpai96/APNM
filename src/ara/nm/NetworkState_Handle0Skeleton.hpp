@@ -1,5 +1,5 @@
-#ifndef ARA_NM_NETWORK_STATE_HANDLE_1_SKELETON_H_
-#define ARA_NM_NETWORK_STATE_HANDLE_1_SKELETON_H_
+#ifndef ARA_NM_NETWORK_STATE_HANDLE_0_SKELETON_H_
+#define ARA_NM_NETWORK_STATE_HANDLE_0_SKELETON_H_
 
 #include "../com/fakecom.hpp"
 #include "../core/result.h"
@@ -8,6 +8,7 @@
 #include "../core/future.h"
 #include "../core/vector.h"
 #include "NetworkStateType.hpp"
+#include "../../../include/prototype.h"
 
 #include <functional>
 
@@ -16,7 +17,6 @@ namespace ara {
         namespace skeleton {
             //Adapted from AUTOSAR_EXP_ARAComAPI Listing 5.12
             //The content of these classes should be generated, but sadly we don't have a generator
-
             namespace fields {
                 class NetworkCurrentState {
                 public:
@@ -46,53 +46,53 @@ namespace ara {
                 };
             }
 
-            class NetworkState_Handle1Skeleton {
+            class NetworkState_Handle0Skeleton {
             public:
                 //constructors
-                NetworkState_Handle1Skeleton(
+                NetworkState_Handle0Skeleton(
                     ara::com::InstanceIdentifier instanceId,
                     ara::com::MethodCallProcessingMode mode = 
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle1Skeleton> Create(
+                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
                     const ara::com::InstanceIdentifier &instanceID,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
 
-                NetworkState_Handle1Skeleton(
+                NetworkState_Handle0Skeleton(
                     ara::com::InstanceIdentifierContainer instanceIds,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle1Skeleton> Create(
+                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
                     const ara::com::InstanceIdentifierContainer &instanceIDs,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
 
-                NetworkState_Handle1Skeleton(
+                NetworkState_Handle0Skeleton(
                     ara::core::InstanceSpecifier instanceSpec,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle1Skeleton> Create(
+                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
                     const ara::core::InstanceSpecifier &instanceSpec,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
                 //prohibited constructor/operator
-                NetworkState_Handle1Skeleton(const NetworkState_Handle1Skeleton& other) = delete;
-                NetworkState_Handle1Skeleton& operator=(const NetworkState_Handle1Skeleton& other) = delete;
+                NetworkState_Handle0Skeleton(const NetworkState_Handle0Skeleton& other) = delete;
+                NetworkState_Handle0Skeleton& operator=(const NetworkState_Handle0Skeleton& other) = delete;
 
                 //destructor
-                ~NetworkState_Handle1Skeleton();
+                ~NetworkState_Handle0Skeleton();
 
                 ara::core::Result<void> OfferService();
                 void StopOfferService();
@@ -100,6 +100,9 @@ namespace ara {
 
                 fields::NetworkCurrentState NetworkCurrentState;
                 fields::NetworkRequestedState NetworkRequestedState;
+            protected:
+                //This file should be generated, so corresponding NmNetworkHandle is hard-coded here
+                NmNetworkHandle &handle = nmInstantiation.networkHandle[0];
             };
         }
     }
