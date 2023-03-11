@@ -1,6 +1,6 @@
 # nm class log
 - 規格書寫到NmCluster為abstract，目前內未有virtual func
-- TimeValue暫定為time_t (long long)
+- TimeValue暫定為uint32_t
 - ipv4AddressStirng and ipv6AddressString implemented by string type in C++ (currently)
 - PncMapping中的PhysicalChannel和EthernetPhysicalChannel是否能夠視作同一型態?
 - shortLabel implemented by string
