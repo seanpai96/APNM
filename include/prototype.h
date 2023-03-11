@@ -1,17 +1,8 @@
-#ifndef _VECTOR_H_
-#define _VECTOR_H_ 1
+#ifndef _PROTOTYPE_H_
+#define _PROTOTYPE_H_
 
 #include <vector>
-
-#endif
-
-#ifndef _STRING_H_
-#define _STRING_H_ 1
-
 #include <string>
-
-#endif
-
 
 using namespace std;
 
@@ -128,3 +119,5 @@ class NmInstantiation{
 
 NmInstantiation nmInstantiation;                
 NmConfig nmConfig;
+
+#endif
