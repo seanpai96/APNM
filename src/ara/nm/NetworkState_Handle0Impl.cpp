@@ -32,6 +32,7 @@ NetworkState_Handle0Impl::~NetworkState_Handle0Impl() {
 
 ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara::nm::NetworkStateType newValue) {
     for (auto &machineThread: machines) {
+        //[SWS_ANM_00084], here we notify every network so they know whether they're requested
         machineThread.stateMachine.setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
     }
     //no need to check, the validity is guaranteed by enum NetworkStateType
@@ -68,6 +69,7 @@ void NetworkState_Handle0Impl::initialize() {
 }
 
 void NetworkState_Handle0Impl::updateNetworkCurrentState() {
+    //[SWS_ANM_00083], NetworkCurrentState should be kFullCom only if all associated networks are in Network Mode
     auto targetState = NetworkStateType::kFullCom;
     for (auto &machineThread: machines) {
         if (!machineThread.machineInNetworkMode) {
