@@ -1,5 +1,8 @@
 #include <vector>
+#include <string>
 using namespace std;
+
+typedef uint32_t TimeValue;                 
 
 class AdaptivePlatformServiceInstance{
 
@@ -56,7 +59,7 @@ class UdpNmNode : public NmNode{
     public:
         bool allNmMessagesKeepAwake;            //Specifies if Nm drops irrelevant NM PDUs
         EtheretConmmunicationConnector communicationConnector;
-        time_t nmMsgCycleOffset;                //Node specific time offset in the periodic transmission node
+        TimeValue nmMsgCycleOffset;              //Node specific time offset in the periodic transmission node
 };
 
 class NmCluster{                                //this class is abstract
@@ -79,14 +82,16 @@ class UdpNmCluster : public NmCluster{
     public:
         UdpNmNetworkConfiguration networkConfiguration;
         int nmCbvPosition;                      //Defines the position of the control bit vector within the Nm Pdu (Byte positon).
-        time_t nmMsgCycleTime;                  //Period of a NmPdu in seconds
-        time_t nmNetworkTimeout;                //Network Timeout for NmPdus in seconds
+        TimeValue nmImmediateNmCycleTime;       //Defines the immediate NmPdu cycle time in seconds which is used for nmImmediateNmTransmissions NmPdu transmissions.
+        unsigned int nmImmediateNmTransmissions;//Defines the number of immediate NmPdus which shall be transmitted
+        TimeValue nmMsgCycleTime;               //Period of a NmPdu in seconds
+        TimeValue nmNetworkTimeout;             //Network Timeout for NmPdus in seconds
         int nmNidPosition;                      //Defines the byte position of the source node identifier within the NmPdu
-        time_t nmRepeatMessageTime;             //Timeout for Repeat Message State in seconds
+        TimeValue nmRepeatMessageTime;          //Timeout for Repeat Message State in seconds
         int nmUserDataLength;                   //Defines the length in bytes of the user data contained in the Nm message
         unsigned int nmUserDataOffset;          //Specifies the offset (in bytes) of the user data information in the NM message
-        time_t nmWaitBusSleepTime;              //Timeout for bus calm down phase in seconds
-        vector<EthernetPhysicalChannel> vlan;           //Reference to vlan
+        TimeValue nmWaitBusSleepTime;           //Timeout for bus calm down phase in seconds
+        vector<EthernetPhysicalChannel> vlan;   //Reference to vlan
 };
 
 class NmConfig{
@@ -97,13 +102,13 @@ class NmConfig{
 
 class NmNetworkHandle{
     public:
-        PncMappingIdent partialNetwork;         //reference to a pnc that included in this handle
-        EtheretConmmunicationConnector vlan;    //reference to a vlan that included in this handle
+        vector<PncMappingIdent> partialNetwork;         //reference to a pnc that included in this handle
+        vector<EtheretConmmunicationConnector> vlan;    //reference to a vlan that included in this handle
 };
 
 class NmInstantiation{
     public:
-        NmNetworkHandle networkHandle;          //supported handles used to control PNC
+        vector<NmNetworkHandle> networkHandle;          //supported handles used to control PNC
 };
 
 /*              Declaration             */
