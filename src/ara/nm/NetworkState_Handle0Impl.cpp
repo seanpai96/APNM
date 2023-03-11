@@ -41,7 +41,7 @@ ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara
     return promise.get_future();
 }
 
-IStateMachine NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector connector, std::function<void(bool)> &onStateChangeToNetwork) {
+IStateMachine NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
     auto &node = NmConfigReader::instance[connector];
     auto &cluster = NmConfigReader::instance[node];
     return ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);

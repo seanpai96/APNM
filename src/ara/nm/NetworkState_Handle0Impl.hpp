@@ -42,7 +42,7 @@ namespace ara {
 
             private:
             void initialize();
-            IStateMachine createMachine(EtheretConmmunicationConnector connector, std::function<void(bool)> &onStateChangeToNetwork);
+            IStateMachine createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
             int getEthernetConnectorNumber();
         };
     }
