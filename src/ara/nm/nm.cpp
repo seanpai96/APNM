@@ -88,6 +88,8 @@ namespace ara {
             } else if (state == NMInstanceState::NM_STATE_BUS_SLEEP) {  // bus sleep
                 if (isNetworkRequested == true || recievedNmMsg) {
                     // network requested, enter network mode
+                    onStateChangeToNetwork(true);
+                    
                     state = NMInstanceState::NM_STATE_REPEAT_MESSAGE;
                     isNmImmediateCycleTimerRunning = true;
                     isNmTimeoutTimerRunning = true;
