@@ -1,3 +1,6 @@
+#ifndef ARA_NM_NM_H_
+#define ARA_NM_NM_H_
+
 #include "nm.hpp"
 
 //#include <bits/stdc++.h>
@@ -250,3 +253,5 @@ namespace ara {
         }
     }  // namespace nm
 }  // namespace ara
+
+#endif
