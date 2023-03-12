@@ -44,10 +44,10 @@ public:
         return 1;
     }
     int serverSendBuffer(char node){
-        char buf[2] = {0,node};
+        char buf[4] = {0,node,0,0};
         unsigned slen=sizeof(sockaddr);
         std::cout << "sent message, content: " << buf[0]+'0' << ' ' << buf[1]+'0' << std::endl; 
-        sendto(sock_Server,buf,strlen(buf)-1,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
+        sendto(sock_Server,buf,strlen(buf),0,(sockaddr *)&server_Addr,sizeof(server_Addr));
         return 1;
     }
     int setClientAndBind(){
@@ -79,10 +79,10 @@ public:
         return 1;
     }
     int receiveBroadcast(char node){
-        char buffer[2];
+        char buffer[4];
         struct sockaddr_in cliaddr;
         socklen_t len = sizeof(cliaddr);
-        int n = recv( sock_Client,buffer, 2,0);
+        int n = recv( sock_Client,buffer, 4,0);
 
         if(n == -1 || buffer[1] == node){
             if (buffer[1] == node){
