@@ -54,10 +54,9 @@ int NetworkState_Handle0Impl::getEthernetConnectorNumber() {
 void NetworkState_Handle0Impl::initialize() {
     NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
     for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
-        machines.emplace_back(Machine{
-                .handle = this
-        });
+        machines.emplace_back(Machine());
         auto &last = machines.back();
+        last.handle = this;
         last.stateMachine = createMachine(handle.vlan[i], last.machineStateChangeCallback);
     }
 
