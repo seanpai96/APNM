@@ -21,6 +21,20 @@ int main() {
     node1.nmMsgCycleOffset = 1;
 
     UdpNmCluster cluster{};
+    cluster.nmCbvPosition = 0;
+    cluster.nmImmediateNmCycleTime = 3;
+    cluster.nmImmediateNmTransmissions = 0;
+    cluster.nmMsgCycleTime = 5;
+    cluster.nmNetworkTimeout = 20;
+    cluster.nmNidPosition = 1;
+    cluster.nmPncParticipation = false;
+    cluster.nmRepeatMessageTime = 10;
+    cluster.nmUserDataLength = 0;
+    cluster.nmUserDataOffset = 3;
+    cluster.nmWaitBusSleepTime = 20;
+    cluster.pncClusterVectorLength = 0;
+
+
     cluster.nmNode = vector<NmNode>{ node0, node1 };
 
     nmConfig.nmCluster = vector<NmCluster>{ cluster };
