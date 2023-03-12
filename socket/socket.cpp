@@ -47,7 +47,7 @@ public:
         char buf[4] = {0,node,0,0};
         unsigned slen=sizeof(sockaddr);
         std::cout << "sent message, content: " << buf[0]+'0' << ' ' << buf[1]+'0' << std::endl; 
-        sendto(sock_Server,buf,strlen(buf),0,(sockaddr *)&server_Addr,sizeof(server_Addr));
+        sendto(sock_Server,buf,4,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
         return 1;
     }
     int setClientAndBind(){
