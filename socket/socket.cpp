@@ -39,7 +39,7 @@ public:
         server_Addr.sin_family = AF_INET;
         server_Addr.sin_port = htons(port);
         // server_Addr.sin_addr.s_addr = INADDR_BROADCAST ;//need to set addr
-        client_Addr.sin_addr.s_addr = inet_addr(addr.c_str());
+        server_Addr.sin_addr.s_addr = inet_addr(addr.c_str());
         std::cout << "Binding to " << inet_ntoa(server_Addr.sin_addr) << ":" << ntohs(server_Addr.sin_port) << std::endl;
         return 1;
     }
