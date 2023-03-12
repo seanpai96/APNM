@@ -4,7 +4,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <cstring>
+#include <string>
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
@@ -24,7 +24,7 @@ public:
     int broadcast = 1;
     struct sockaddr_in client_Addr,server_Addr;
     int port = 11115;
-    int setServerAndBind(){
+    int setServerAndBind(string addr){
         sock_Server = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         if (sock_Server < 0) {
             std::cerr << "socket creation failed" << std::endl;
@@ -38,13 +38,13 @@ public:
         memset(&server_Addr, 0, sizeof(server_Addr));
         server_Addr.sin_family = AF_INET;
         server_Addr.sin_port = htons(port);
-        server_Addr.sin_addr.s_addr = INADDR_BROADCAST ;//need to set addr
-        //std::cout << "Binding to " << inet_ntoa(server_Addr.sin_addr) << ":" << ntohs(server_Addr.sin_port) << std::endl;
+        // server_Addr.sin_addr.s_addr = INADDR_BROADCAST ;//need to set addr
+        client_Addr.sin_addr.s_addr = inet_addr(addr);
+        // std::cout << "Binding to " << inet_ntoa(server_Addr.sin_addr) << ":" << ntohs(server_Addr.sin_port) << std::endl;
         return 1;
     }
-    int serverSendBuffer(){
-        char buf[1000];
-        strcpy(buf, "twireshark\n");
+    int serverSendBuffer(char node){
+        char buf[2] = {0,node};
         unsigned slen=sizeof(sockaddr);
         sendto(sock_Server,buf,strlen(buf)-1,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
         return 1;
@@ -77,12 +77,13 @@ public:
         }
         return 1;
     }
-    int receiveBroadcast(){
-        char buffer[1024];
+    int receiveBroadcast(char node){
+        char buffer[2];
         struct sockaddr_in cliaddr;
         socklen_t len = sizeof(cliaddr);
-        int n = recv( sock_Client,buffer, 1024,0);
-        if(n == -1){
+        int n = recv( sock_Client,buffer, 2,0);
+
+        if(n == -1 || buffer[1] == node){
             return 0;
         }else{
             return 1;
