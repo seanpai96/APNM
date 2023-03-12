@@ -38,14 +38,15 @@ public:
         memset(&server_Addr, 0, sizeof(server_Addr));
         server_Addr.sin_family = AF_INET;
         server_Addr.sin_port = htons(port);
-        // server_Addr.sin_addr.s_addr = INADDR_BROADCAST ;//need to set addr
-        server_Addr.sin_addr.s_addr = inet_addr(addr.c_str());
+        server_Addr.sin_addr.s_addr = INADDR_BROADCAST ;//need to set addr
+        // server_Addr.sin_addr.s_addr = inet_addr(addr.c_str());
         std::cout << "Binding to " << inet_ntoa(server_Addr.sin_addr) << ":" << ntohs(server_Addr.sin_port) << std::endl;
         return 1;
     }
     int serverSendBuffer(char node){
         char buf[2] = {0,node};
         unsigned slen=sizeof(sockaddr);
+        std::cout << "sent message, content: " << buf[0] << ' ' << buf[1] << std::endl; 
         sendto(sock_Server,buf,strlen(buf)-1,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
         return 1;
     }
@@ -84,8 +85,12 @@ public:
         int n = recv( sock_Client,buffer, 2,0);
 
         if(n == -1 || buffer[1] == node){
+            if (buffer[1] == node){
+                std::cout << "receive broadcast from " << buffer[1] << std::endl;
+            }
             return 0;
         }else{
+            std::cout << "receive broadcast from " << buffer[1] << std::endl;
             return 1;
         }
     }
