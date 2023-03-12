@@ -28,4 +28,5 @@ add_executable(APNM src/main.cpp
         src/ara/nm/NetworkState_Handle0Skeleton.hpp
         src/ara/nm/NetworkStateType.hpp
         src/ara/nm/nm.hpp
-        src/ara/nm/NmConfigReader.hpp)
+        src/ara/nm/NmConfigReader.hpp
+        src/ara/nm/NmConfigReader.cpp)

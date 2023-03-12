@@ -26,14 +26,15 @@ ara::core::Vector<Machine> machines;
 
 NetworkState_Handle0Impl::~NetworkState_Handle0Impl() {
     for (auto &machineThread: machines) {
-        machineThread.stateMachine.StopInstance();
+        machineThread.stateMachine -> StopInstance();
+        delete machineThread.stateMachine;
     }
 }
 
 ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara::nm::NetworkStateType newValue) {
     for (auto &machineThread: machines) {
         //[SWS_ANM_00084], here we notify every network so they know whether they're requested
-        machineThread.stateMachine.setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
+        machineThread.stateMachine -> setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
     }
     //no need to check, the validity is guaranteed by enum NetworkStateType
     auto promise = ara::core::Promise<ara::nm::NetworkStateType>();
@@ -41,10 +42,10 @@ ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara
     return promise.get_future();
 }
 
-IStateMachine NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
-    auto &node = NmConfigReader::instance[connector];
-    auto &cluster = NmConfigReader::instance[node];
-    return ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
+IStateMachine *NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
+    auto &node = configReader[connector];
+    auto &cluster = configReader[node];
+    return new ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
 }
 
 int NetworkState_Handle0Impl::getEthernetConnectorNumber() {
@@ -61,7 +62,7 @@ void NetworkState_Handle0Impl::initialize() {
     }
 
     for (auto &machine: machines) {
-        machine.stateMachine.StartInstance();
+        machine.stateMachine -> StartInstance();
     }
 
     OfferService();

@@ -5,9 +5,9 @@
 
 class IStateMachine {
 public:
-    virtual void StartInstance();
-    virtual void StopInstance();
-    virtual void setRequested(bool requested);
+    virtual void StartInstance() = 0;
+    virtual void StopInstance() = 0;
+    virtual void setRequested(bool requested) = 0;
 };
 
 #endif

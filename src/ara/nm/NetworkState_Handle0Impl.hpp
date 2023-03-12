@@ -42,14 +42,14 @@ namespace ara {
 
             private:
             void initialize();
-            IStateMachine createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
+            IStateMachine *createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
             int getEthernetConnectorNumber();
         };
     }
 }
 
 struct Machine {
-    IStateMachine stateMachine;
+    IStateMachine *stateMachine;
     ara::nm::NetworkState_Handle0Impl *handle;
 
     bool machineInNetworkMode = false;
