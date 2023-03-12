@@ -10,7 +10,7 @@ namespace ara {
     namespace nm {
         NMInstance::NMInstance(UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork)
             : node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
-            socket.setServerAndBind();
+            socket.setServerAndBind(cluster->networkConfiguration.ipv4MulticastipAaddress);
             socket.setClientAndBind();
         }
 
@@ -52,6 +52,7 @@ namespace ara {
 
         void NMInstance::Tick() {
             _ticks++;
+            char nodeIDChar = node->nmNodeId;
             if(state == NMInstanceState::NM_STATE_INIT)
                 std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_INIT" << std::endl;
@@ -74,7 +75,7 @@ namespace ara {
                 std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_UNKNOWN" << std::endl;
             // check nmMessage
-            if (socket.receiveBroadcast() == 1) {
+            if (socket.receiveBroadcast(nodeIDChar) == 1) {
                 recievedNmMsg = true;
                 std::cout<<"recievedNmMsg = true"<<std::endl;
                 // recived nmMessage, restart timeout timer
@@ -89,7 +90,7 @@ namespace ara {
                 if (isNetworkRequested == true || recievedNmMsg) {
                     // network requested, enter network mode
                     onStateChangeToNetwork(true);
-                    
+
                     state = NMInstanceState::NM_STATE_REPEAT_MESSAGE;
                     isNmImmediateCycleTimerRunning = true;
                     isNmTimeoutTimerRunning = true;
@@ -144,7 +145,7 @@ namespace ara {
                     } else {
                         if (nmImmediateCycleTimerTicks >= cluster -> nmImmediateNmCycleTime) {
                             // send immediate message
-                            socket.serverSendBuffer();
+                            socket.serverSendBuffer(nodeIDChar);
                             RestartTimeoutTimer();  // message sent, restart timeout timer
                             immediateCycleTimes--;
                             nmImmediateCycleTimerTicks = 0;
@@ -171,7 +172,7 @@ namespace ara {
                         if (isNmMsgCycleTimerRunning) {
                             if (nmMsgCycleTimerTicks >= cluster -> nmMsgCycleTime) {
                                 // send repeat message
-                                socket.serverSendBuffer();  // message sent, restart timeout timer
+                                socket.serverSendBuffer(nodeIDChar);  // message sent, restart timeout timer
                                 RestartTimeoutTimer();
                                 nmMsgCycleTimerTicks = 0;
                             } else {
@@ -197,7 +198,7 @@ namespace ara {
                 } else if (isNmMsgCycleTimerRunning) {
                     if (nmMsgCycleTimerTicks >= cluster -> nmMsgCycleTime) {
                         // send Nm message
-                        socket.serverSendBuffer();  // message sent, restart timeout timer
+                        socket.serverSendBuffer(nodeIDChar);  // message sent, restart timeout timer
                         RestartTimeoutTimer();
                         nmMsgCycleTimerTicks = 0;
                     } else {
