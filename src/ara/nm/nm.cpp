@@ -53,19 +53,26 @@ namespace ara {
         void NMInstance::Tick() {
             _ticks++;
             if(state == NMInstanceState::NM_STATE_INIT)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_INIT"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_INIT" << std::endl;
             else if(state == NMInstanceState::NM_STATE_BUS_SLEEP)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_BUS_SLEEP"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_BUS_SLEEP" << std::endl;
             else if(state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_PREPARE_BUS_SLEEP"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_PREPARE_BUS_SLEEP" << std::endl;
             else if(state == NMInstanceState::NM_STATE_REPEAT_MESSAGE)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_REPEAT_MESSAGE"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_REPEAT_MESSAGE" << std::endl;
             else if(state == NMInstanceState::NM_STATE_NORMAL_OPERATION)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_NORMAL_OPERATION"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_NORMAL_OPERATION" << std::endl;
             else if(state == NMInstanceState::NM_STATE_READY_SLEEP)
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_READY_SLEEP"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_READY_SLEEP" << std::endl;
             else
-                std::cout<<"NodeID: "<<node.nodeId<<" Tick: "<<_ticks<<"current_state"<<"NM_STATE_UNKNOWN"<<std::endl;
+                std::cout << "NodeID: " << node.nmNodeId << " Tick: " << _ticks << "current_state"
+                          << "NM_STATE_UNKNOWN" << std::endl;
             // check nmMessage
             if (socket.receiveBroadcast() == 1) {
                 recievedNmMsg = true;
