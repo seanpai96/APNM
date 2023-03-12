@@ -69,7 +69,8 @@ public:
         client_Addr.sin_port = htons(port);
         //std::cout << "Binding to " << inet_ntoa(client_Addr.sin_addr) << ":" << ntohs(client_Addr.sin_port) << std::endl;
 
-        if (bind(sock_Client, (struct sockaddr *) &client_Addr, sizeof(client_Addr)) < 0) { // 绑定套接字
+        int status = bind(sock_Client, (struct sockaddr *) &client_Addr, sizeof(client_Addr));
+        if (status < 0) { // 绑定套接字
             std::cerr << "bind failed"<< strerror(errno) << std::endl;
             closeClientSocket();
             return 0;

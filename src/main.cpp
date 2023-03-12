@@ -2,6 +2,9 @@
 #include "ara/nm/NetworkState_Handle0Impl.hpp"
 #include "ara/com/com_set_handler.hpp"
 
+#include <chrono>
+#include <iostream>
+
 int main() {
     EtheretConmmunicationConnector connector0;
     UdpNmNode node0{};
@@ -49,7 +52,8 @@ int main() {
         handler(ara::nm::NetworkStateType::kFullCom);
     }
 
-    this_thread::sleep_for(5000ms);
+    int i;
+    std::cin >> i;
 
     for (auto &handler: handlers[&networkHandle.NetworkRequestedState]) {
         handler(ara::nm::NetworkStateType::kNoCom);

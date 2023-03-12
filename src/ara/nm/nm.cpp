@@ -1,6 +1,6 @@
 #include "nm.hpp"
 
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
 
 #include "../../../include/prototype.h"
 #include "../../../socket/socket.cpp"
