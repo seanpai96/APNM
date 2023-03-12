@@ -1,5 +1,5 @@
 #include "NetworkState_Handle0Impl.hpp"
-#include "nm.cpp"
+#include "nm.hpp"
 #include "NmConfigReader.hpp"
 
 using ara::nm::NetworkState_Handle0Impl;
