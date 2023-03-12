@@ -38,12 +38,14 @@ int main() {
     cluster.pncClusterVectorLength = 0;
 
 
-    cluster.nmNode = vector<NmNode>{ node0, node1 };
+    //cluster.nmNode = vector<NmNode *>{ &node0, &node1 };
+    cluster.nmNode.push_back(&node0);
+    cluster.nmNode.push_back(&node1);
 
-    nmConfig.nmCluster = vector<NmCluster>{ cluster };
+    nmConfig.nmCluster = vector<NmCluster *>{ &cluster };
 
     nmInstantiation.networkHandle = vector<NmNetworkHandle>{
-            {{}, {&connector0}}
+            {{}, {&connector1}}
     };
 
     //handle started

@@ -4,6 +4,7 @@
 #include <map>
 #include <unordered_map>
 #include <utility>
+#include <iostream>
 
 #include "../../../include/prototype.h"
 
@@ -14,25 +15,26 @@ private:
     std::unordered_map<EtheretConmmunicationConnector *, pair<int, int>> connectorToIndices;
     void initializeMaps() {
         for (int i = 0; i < nmConfig.nmCluster.size(); i++) {
-            auto &cluster = nmConfig.nmCluster[i];
-            for (int j = 0; j < cluster.nmNode.size(); j++) {
-                auto *node = (UdpNmNode *)&cluster.nmNode[i];
+            auto cluster = nmConfig.nmCluster[i];
+            for (int j = 0; j < cluster -> nmNode.size(); j++) {
+                auto node = (UdpNmNode *)cluster -> nmNode[j];
                 auto connector = node -> communicationConnector;
+                std::cout << "connector: " << connector << " nodeId: " << node -> nmNodeId << std::endl;
                 connectorToIndices[connector] = make_pair(i, j);
             }
         }
     }
 public:
-    UdpNmNode& operator[](EtheretConmmunicationConnector *connector) {
+    UdpNmNode *operator[](EtheretConmmunicationConnector *connector) {
         if (connectorToIndices.empty()) initializeMaps();
         auto indices = connectorToIndices[connector];
-        return static_cast<UdpNmNode &>(nmConfig.nmCluster[indices.first].nmNode[indices.second]);
+        return (UdpNmNode *)nmConfig.nmCluster[indices.first] -> nmNode[indices.second];
     }
 
-    UdpNmCluster& operator[](UdpNmNode& node) {
+    UdpNmCluster *operator[](UdpNmNode *node) {
         if (connectorToIndices.empty()) initializeMaps();
-        auto indices = connectorToIndices[node.communicationConnector];
-        return static_cast<UdpNmCluster &>(nmConfig.nmCluster[indices.first]);
+        auto indices = connectorToIndices[node -> communicationConnector];
+        return (UdpNmCluster *)nmConfig.nmCluster[indices.first];
     }
 };
 

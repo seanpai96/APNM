@@ -43,8 +43,8 @@ ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara
 }
 
 IStateMachine *NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
-    auto &node = configReader[connector];
-    auto &cluster = configReader[node];
+    auto node = configReader[connector];
+    auto cluster = configReader[node];
     return new ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
 }
 

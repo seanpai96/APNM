@@ -20,15 +20,15 @@ namespace ara{
         };
 
         class NMInstance : public IStateMachine {
-            UdpNmNode &node;
-            UdpNmCluster &cluster;
+            UdpNmNode *node;
+            UdpNmCluster *cluster;
             CallbackTimer timer;
             NMInstanceState state = NMInstanceState::NM_STATE_INIT;
             std::function<void(bool)> &onStateChangeToNetwork;
             Socket socket;
 
            public:
-            NMInstance(UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork);
+            NMInstance(UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork);
             void StartInstance();
             void StopInstance();
             void setRequested(bool requested);

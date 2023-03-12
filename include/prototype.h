@@ -68,7 +68,7 @@ class UdpNmNode : public NmNode{
 
 class NmCluster{                                //this class is abstract
     public:
-        vector<NmNode> nmNode;                  //collections of mnNodes in this cluster
+        vector<NmNode *> nmNode;                  //collections of mnNodes in this cluster
         CommunicationCluster communicationCluster;
         bool nmPncParticipation = false;        //currently mo use
         unsigned int pncClusterVectorLength;    //currently no use
@@ -100,7 +100,7 @@ class UdpNmCluster : public NmCluster{
 
 class NmConfig{
     public:
-        vector<NmCluster> nmCluster;            //collection of mnClusters
+        vector<NmCluster *> nmCluster;            //collection of mnClusters
 };
 
 
