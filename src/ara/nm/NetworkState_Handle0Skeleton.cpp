@@ -1,6 +1,8 @@
 #include "NetworkState_Handle0Skeleton.hpp"
 #include "../com/com_set_handler.hpp"
 
+#include <iostream>
+
 //com impelementaitons are minimized, most of them are ignored
 //These content should be generated, but sadly we don't have a generator
 using ara::nm::skeleton::NetworkState_Handle0Skeleton;
@@ -73,6 +75,7 @@ ara::core::Result<void> NetworkCurrentState::Update(
     //AUTOSAR_EXP_ARAComAPI 5.4.8.5
 
     //since we don't have a real ara::com, a plain return is provided
+    std::cout << "Update to " << (data == ara::nm::NetworkStateType::kNoCom ? "noCom" : "fullCom") << std::endl;
     return ara::core::Result<void>();
 }
 
