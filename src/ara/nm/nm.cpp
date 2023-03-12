@@ -1,5 +1,5 @@
-#ifndef ARA_NM_NM_H_
-#define ARA_NM_NM_H_
+#ifndef ARA_NM_NM_CPP_
+#define ARA_NM_NM_CPP_
 
 #include "nm.hpp"
 

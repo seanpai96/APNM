@@ -1,5 +1,5 @@
-#ifndef ARA_NM_NM_H_
-#define ARA_NM_NM_H_
+#ifndef ARA_NM_NM_HPP_
+#define ARA_NM_NM_HPP_
 
 
 #include <cstdint>
