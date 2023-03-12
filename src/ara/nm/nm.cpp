@@ -47,7 +47,8 @@ namespace ara {
 
         NMInstance::NMInstance(UdpNmNode &node, UdpNmCluster &cluster, std::function<void(bool)> &onStateChangeToNetwork)
             : node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
-            // TODO : init socket
+            socket.setServerAndBind();
+            socket.setClientAndBind();
         }
 
         void NMInstance::StartInstance() {
@@ -145,7 +146,7 @@ namespace ara {
                     } else {
                         if (nmImmediateCycleTimerTicks >= cluster.nmImmediateNmCycleTime) {
                             // send immediate message
-                            node.SendNmMessage();
+                            socket.serverSendBuffer();
                             RestartTimeoutTimer();  // message sent, restart timeout timer
                             immediateCycleTimes--;
                             nmImmediateCycleTimerTicks = 0;
@@ -172,7 +173,7 @@ namespace ara {
                         if (isNmMsgCycleTimerRunning) {
                             if (nmMsgCycleTimerTicks >= cluster.nmMsgCycleTime) {
                                 // send repeat message
-                                node.SendNmMessage();  // message sent, restart timeout timer
+                                socket.serverSendBuffer();  // message sent, restart timeout timer
                                 RestartTimeoutTimer();
                                 nmMsgCycleTimerTicks = 0;
                             } else {
@@ -198,7 +199,7 @@ namespace ara {
                 } else if (isNmMsgCycleTimerRunning) {
                     if (nmMsgCycleTimerTicks >= cluster.nmMsgCycleTime) {
                         // send Nm message
-                        node.SendNmMessage();  // message sent, restart timeout timer
+                        socket.serverSendBuffer();  // message sent, restart timeout timer
                         RestartTimeoutTimer();
                         nmMsgCycleTimerTicks = 0;
                     } else {
