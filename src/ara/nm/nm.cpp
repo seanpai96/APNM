@@ -35,6 +35,7 @@ namespace ara {
             bool isNmMsgCycleTimerRunning = false;
             bool isNmImmediateCycleTimerRunning = false;
             bool isNmWaitBusSleepTimerRunning = false;
+            int nmMsgCycleOffsetRemainingTicks = 0;
             int nmTimeoutTimerTicks = 0;
             int nmRepeatMessageTimerTicks = 0;
             int nmMsgCycleTimerTicks = 0;
@@ -109,6 +110,8 @@ namespace ara {
                     nmTimeoutTimerTicks = 0;
                     nmImmediateCycleTimerTicks = 0;
                     immediateCycleTimes = cluster.nmImmediateNmTransmissions;
+
+                    nmMsgCycleOffsetRemainingTicks = node.nmMsgCycleOffset;
                 }
                 // bus sleep finish
             } else if (state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP) {  // prepare bus sleep
@@ -122,6 +125,7 @@ namespace ara {
                     nmTimeoutTimerTicks = 0;
                     nmImmediateCycleTimerTicks = 0;
                     immediateCycleTimes = cluster.nmImmediateNmTransmissions;
+                    nmMsgCycleOffsetRemainingTicks = node.nmMsgCycleOffset;
                 } else if (isNmWaitBusSleepTimerRunning) {
                     if (nmWaitBusSleepTimerTicks >= cluster.nmWaitBusSleepTime) {
                         // wait bus sleep timeout, enter bus sleep mode
@@ -134,7 +138,15 @@ namespace ara {
                 }
                 // prepare bus sleep finish
             } else if (state == NMInstanceState::NM_STATE_REPEAT_MESSAGE) {  // repeat message
-                if (isNmImmediateCycleTimerRunning) {
+                bool isInOffset = false;
+                if(nmMsgCycleOffsetRemainingTicks >= 0){
+                    nmMsgCycleOffsetRemainingTicks--;
+                    isInOffset = true;
+                }else{
+                    isInOffset = false;
+                }
+
+                if (isNmImmediateCycleTimerRunning && !isInOffset) {
                     if (immediateCycleTimes <= 0) {
                         // immediate cycle times used up, start repeat message timer and message cycle timer
                         isNmImmediateCycleTimerRunning = false;
@@ -154,7 +166,7 @@ namespace ara {
                             nmImmediateCycleTimerTicks++;
                         }
                     }
-                } else if (isNmRepeatMessageTimerRunning) {
+                } else if (isNmRepeatMessageTimerRunning && !isInOffset) {
                     if (nmRepeatMessageTimerTicks >= cluster.nmRepeatMessageTime) {
                         // repeat message timeout, check request network state
                         isNmRepeatMessageTimerRunning = false;
