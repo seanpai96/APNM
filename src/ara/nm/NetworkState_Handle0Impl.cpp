@@ -2,6 +2,8 @@
 #include "nm.hpp"
 #include "NmConfigReader.hpp"
 
+#include <iostream>
+
 using ara::nm::NetworkState_Handle0Impl;
 
 NetworkState_Handle0Impl::NetworkState_Handle0Impl(
@@ -72,6 +74,7 @@ void NetworkState_Handle0Impl::updateNetworkCurrentState() {
     //[SWS_ANM_00083], NetworkCurrentState should be kFullCom only if all associated networks are in Network Mode
     auto targetState = NetworkStateType::kFullCom;
     for (auto &machineThread: machines) {
+        std::cout << &machineThread << " in network mode in update: " << machineThread.machineInNetworkMode << std::endl;
         if (!machineThread.machineInNetworkMode) {
             targetState = NetworkStateType::kNoCom;
             break;

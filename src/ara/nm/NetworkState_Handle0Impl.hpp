@@ -7,6 +7,7 @@
 #include "IStateMachine.hpp"
 
 #include <functional>
+#include <iostream>
 
 struct Machine;
 
@@ -54,6 +55,7 @@ struct Machine {
 
     bool machineInNetworkMode = false;
     std::function<void(bool)> machineStateChangeCallback = [this](bool isToNetworkMode) {
+        std::cout << this << " network mode set to " << isToNetworkMode << std::endl;
         this -> machineInNetworkMode = isToNetworkMode;
         this -> handle -> updateNetworkCurrentState();
     };
