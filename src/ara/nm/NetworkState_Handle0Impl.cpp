@@ -24,19 +24,19 @@ NetworkState_Handle0Impl::NetworkState_Handle0Impl(
     initialize();
 }
 
-ara::core::Vector<Machine> machines;
+ara::core::Vector<Machine *> machines;
 
 NetworkState_Handle0Impl::~NetworkState_Handle0Impl() {
     for (auto &machineThread: machines) {
-        machineThread.stateMachine -> StopInstance();
-        delete machineThread.stateMachine;
+        machineThread -> stateMachine -> StopInstance();
+        delete machineThread -> stateMachine;
     }
 }
 
 ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara::nm::NetworkStateType newValue) {
     for (auto &machineThread: machines) {
         //[SWS_ANM_00084], here we notify every network so they know whether they're requested
-        machineThread.stateMachine -> setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
+        machineThread -> stateMachine -> setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
     }
     //no need to check, the validity is guaranteed by enum NetworkStateType
     auto promise = ara::core::Promise<ara::nm::NetworkStateType>();
@@ -57,14 +57,15 @@ int NetworkState_Handle0Impl::getEthernetConnectorNumber() {
 void NetworkState_Handle0Impl::initialize() {
     NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
     for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
-        machines.emplace_back(Machine());
+        Machine *machine = new Machine();
+        machines.emplace_back(machine);
         auto &last = machines.back();
-        last.handle = this;
-        last.stateMachine = createMachine(handle.vlan[i], last.machineStateChangeCallback);
+        last -> handle = this;
+        last -> stateMachine = createMachine(handle.vlan[i], last -> machineStateChangeCallback);
     }
 
     for (auto &machine: machines) {
-        machine.stateMachine -> StartInstance();
+        machine -> stateMachine -> StartInstance();
     }
 
     OfferService();
@@ -74,8 +75,8 @@ void NetworkState_Handle0Impl::updateNetworkCurrentState() {
     //[SWS_ANM_00083], NetworkCurrentState should be kFullCom only if all associated networks are in Network Mode
     auto targetState = NetworkStateType::kFullCom;
     for (auto &machineThread: machines) {
-        std::cout << &machineThread << " in network mode in update: " << machineThread.machineInNetworkMode << std::endl;
-        if (!machineThread.machineInNetworkMode) {
+        std::cout << &machineThread << " in network mode in update: " << machineThread -> machineInNetworkMode << std::endl;
+        if (!machineThread -> machineInNetworkMode) {
             targetState = NetworkStateType::kNoCom;
             break;
         }
