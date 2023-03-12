@@ -24,7 +24,7 @@ public:
     int broadcast = 1;
     struct sockaddr_in client_Addr,server_Addr;
     int port = 11115;
-    int setServerAndBind(string addr){
+    int setServerAndBind(std::string addr){
         sock_Server = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         if (sock_Server < 0) {
             std::cerr << "socket creation failed" << std::endl;
