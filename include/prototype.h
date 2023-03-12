@@ -117,7 +117,7 @@ class NmInstantiation{
 
 /*              Declaration             */
 
-NmInstantiation nmInstantiation;                
-NmConfig nmConfig;
+extern NmInstantiation nmInstantiation;                
+extern NmConfig nmConfig;
 
 #endif

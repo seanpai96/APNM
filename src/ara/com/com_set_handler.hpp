@@ -9,7 +9,7 @@
 using ara::nm::skeleton::fields::NetworkRequestedState;
 using ara::nm::NetworkStateType;
 
-map<NetworkRequestedState *,
-    ara::core::Vector<std::function<ara::core::Future<NetworkRequestedState::FieldType>(const NetworkRequestedState::FieldType& data)>>> handlers{};
+extern map<NetworkRequestedState *,
+    ara::core::Vector<std::function<ara::core::Future<NetworkRequestedState::FieldType>(const NetworkRequestedState::FieldType& data)>>> handlers;
 
 #endif

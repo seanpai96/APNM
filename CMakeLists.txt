@@ -12,4 +12,20 @@ add_executable(APNM src/main.cpp
         src/ara/nm/CallbackTimer.cpp
         src/ara/nm/NetworkState_Handle0Impl.cpp
         src/ara/nm/NetworkState_Handle0Skeleton.cpp
-        src/ara/nm/nm.cpp)
+        src/ara/nm/nm.cpp
+        include/prototype.h
+        include/prototype.cpp
+        src/ara/com/com_set_handler.hpp
+        src/ara/com/com_set_handler.cpp
+        src/ara/com/fakecom.hpp
+        src/ara/core/error_code.h
+        src/ara/core/future.h
+        src/ara/core/instance_specifier.h
+        src/ara/core/result.h
+        src/ara/core/vector.h
+        src/ara/nm/IStateMachine.hpp
+        src/ara/nm/NetworkState_Handle0Impl.hpp
+        src/ara/nm/NetworkState_Handle0Skeleton.hpp
+        src/ara/nm/NetworkStateType.hpp
+        src/ara/nm/nm.hpp
+        src/ara/nm/NmConfigReader.hpp)
