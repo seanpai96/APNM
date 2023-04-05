@@ -106,7 +106,7 @@ public:
     }
     int setClientLoopBack(){
         int loop = 1;
-        err = setsockopt(sock_Client, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
+        int err = setsockopt(sock_Client, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
         if (err < 0) {
             std::cerr << "setsockopt():IP_MULTICAST_LOOP"<< strerror(errno) << std::endl;
             return 0;
@@ -114,9 +114,9 @@ public:
         return 1;
     }
     int setCleintAddGroup(std::string str){
-        stMreqClient.imr_multiaddr.s_addr = inet_addr(MCAST_ADDR); 
+        stMreqClient.imr_multiaddr.s_addr = inet_addr(str.c_str());
         stMreqClient.imr_interface.s_addr = htonl(INADDR_ANY); 
-        err = setsockopt(sock_Client, IPPROTO_IP, IP_ADD_MEMBERSHIP, &stMreqClient, sizeof(stMreqClient));
+        int err = setsockopt(sock_Client, IPPROTO_IP, IP_ADD_MEMBERSHIP, &stMreqClient, sizeof(stMreqClient));
         if (err < 0) {
             std::cerr << "setsockopt():IP_ADD_MEMBERSHIP"<< strerror(errno) << std::endl;
             return 0;
@@ -128,7 +128,7 @@ public:
         struct sockaddr_in cliaddr;
         socklen_t len = sizeof(cliaddr);
         //int n = recv( sock_Client,buffer, 4,0);
-        int len = sizeof(client_Addr);
+        int length = sizeof(client_Addr);
         int n =recvfrom(sock_Client, buffer, 4, 0, (struct sockaddr*)&client_Addr,&len);
 
         if(n == -1 || buffer[1] == node){
