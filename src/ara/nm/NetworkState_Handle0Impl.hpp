@@ -24,20 +24,21 @@ namespace ara {
 
         //This class locates in ara::nm namespace since [SWS_ANM_91000] states that 
         //ara::nm is the namespace of NetworkState (the interface of our service)
-        using skeleton::NetworkState_Handle0Skeleton;
-        class NetworkState_Handle0Impl: public NetworkState_Handle0Skeleton {
+        using skeleton::NetworkState_HandleSkeleton;
+        <template int HANDLE>
+        class NetworkState_HandleImpl: public NetworkState_HandleSkeleton<HANDLE> {
             friend IStateMachine;
             public:
             //Here 3 types of constructors are all provided, but mode is not settable (we'll only use kEventSingleThread)
             //we're not going to deal with kEvent and KPoll
-            NetworkState_Handle0Impl(ara::com::InstanceIdentifier instanceIdentifier);
-            NetworkState_Handle0Impl(ara::com::InstanceIdentifierContainer instanceIds);
-            NetworkState_Handle0Impl(ara::core::InstanceSpecifier instanceSpec);
-            ~NetworkState_Handle0Impl();
+            NetworkState_HandleImpl(ara::com::InstanceIdentifier instanceIdentifier);
+            NetworkState_HandleImpl(ara::com::InstanceIdentifierContainer instanceIds);
+            NetworkState_HandleImpl(ara::core::InstanceSpecifier instanceSpec);
+            ~NetworkState_HandleImpl();
 
             //the implementation also prohibit copy constructor and copy assignment
-            NetworkState_Handle0Impl(const NetworkState_Handle0Impl& other) = delete;
-            NetworkState_Handle0Impl& operator=(const NetworkState_Handle0Impl& other) = delete;
+            NetworkState_HandleImpl(const NetworkState_HandleImpl<HANDLE>& other) = delete;
+            NetworkState_HandleImpl<HANDLE>& operator=(const NetworkState_HandleImpl<HANDLE>& other) = delete;
 
             void updateNetworkCurrentState();
 

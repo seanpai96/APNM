@@ -4,21 +4,24 @@
 
 #include <iostream>
 
-using ara::nm::NetworkState_Handle0Impl;
+using ara::nm::NetworkState_HandleImpl;
 
-NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+<template int HANDLE>
+NetworkState_HandleImpl<HANDLE>::NetworkState_HandleImpl(
     ara::com::InstanceIdentifier instanceIdentifier
 ): NetworkState_Handle0Skeleton(instanceIdentifier, ara::com::MethodCallProcessingMode::kEventSingleThread) {
     initialize();
 }
 
-NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+<template int HANDLE>
+NetworkState_HandleImpl<HANDLE>::NetworkState_HandleImpl(
     ara::com::InstanceIdentifierContainer instanceIds
 ): NetworkState_Handle0Skeleton(instanceIds, ara::com::MethodCallProcessingMode::kEventSingleThread) {
     initialize();
 }
 
-NetworkState_Handle0Impl::NetworkState_Handle0Impl(
+<template int HANDLE>
+NetworkState_HandleImpl<HANDLE>::NetworkState_HandleImpl(
     ara::core::InstanceSpecifier instanceSpec
 ): NetworkState_Handle0Skeleton(instanceSpec, ara::com::MethodCallProcessingMode::kEventSingleThread) {
     initialize();
@@ -26,7 +29,8 @@ NetworkState_Handle0Impl::NetworkState_Handle0Impl(
 
 ara::core::Vector<Machine *> machines;
 
-NetworkState_Handle0Impl::~NetworkState_Handle0Impl() {
+<template int HANDLE>
+NetworkState_HandleImpl<HANDLE>::~NetworkState_HandleImpl() {
     for (auto &machineThread: machines) {
         machineThread -> stateMachine -> StopInstance();
         delete machineThread -> stateMachine;
@@ -44,17 +48,20 @@ ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara
     return promise.get_future();
 }
 
-IStateMachine *NetworkState_Handle0Impl::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
+<template int HANDLE>
+IStateMachine *NetworkState_HandleImpl<HANDLE>::createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
     auto node = configReader[connector];
     auto cluster = configReader[node];
     return new ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
 }
 
-int NetworkState_Handle0Impl::getEthernetConnectorNumber() {
+<template int HANDLE>
+int NetworkState_HandleImpl<HANDLE>::getEthernetConnectorNumber() {
     return handle.vlan.size();
 }
 
-void NetworkState_Handle0Impl::initialize() {
+<template int HANDLE>
+void NetworkState_HandleImpl<HANDLE>::initialize() {
     NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
     for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
         Machine *machine = new Machine();
@@ -71,7 +78,8 @@ void NetworkState_Handle0Impl::initialize() {
     OfferService();
 }
 
-void NetworkState_Handle0Impl::updateNetworkCurrentState() {
+<template int HANDLE>
+void NetworkState_HandleImpl<HANDLE>::updateNetworkCurrentState() {
     //[SWS_ANM_00083], NetworkCurrentState should be kFullCom only if all associated networks are in Network Mode
     auto targetState = NetworkStateType::kFullCom;
     for (auto &machineThread: machines) {

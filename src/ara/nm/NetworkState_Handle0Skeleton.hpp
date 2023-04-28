@@ -43,50 +43,51 @@ namespace ara {
                 };
             }
 
-            class NetworkState_Handle0Skeleton {
+            <template int HANDLE>
+            class NetworkState_HandleSkeleton {
             public:
                 //constructors
-                NetworkState_Handle0Skeleton(
+                NetworkState_HandleSkeleton(
                     ara::com::InstanceIdentifier instanceId,
                     ara::com::MethodCallProcessingMode mode = 
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
                     const ara::com::InstanceIdentifier &instanceID,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
 
-                NetworkState_Handle0Skeleton(
+                NetworkState_HandleSkeleton(
                     ara::com::InstanceIdentifierContainer instanceIds,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
                     const ara::com::InstanceIdentifierContainer &instanceIDs,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
 
-                NetworkState_Handle0Skeleton(
+                NetworkState_HandleSkeleton(
                     ara::core::InstanceSpecifier instanceSpec,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_Handle0Skeleton> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
                     const ara::core::InstanceSpecifier &instanceSpec,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
                 //prohibited constructor/operator
-                NetworkState_Handle0Skeleton(const NetworkState_Handle0Skeleton& other) = delete;
-                NetworkState_Handle0Skeleton& operator=(const NetworkState_Handle0Skeleton& other) = delete;
+                NetworkState_HandleSkeleton(const NetworkState_HandleSkeleton<HANDLE>& other) = delete;
+                NetworkState_HandleSkeleton<HANDLE>& operator=(const NetworkState_Handle0Skeleton<HANDLE>& other) = delete;
 
                 //destructor
                 ~NetworkState_Handle0Skeleton();
