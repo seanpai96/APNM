@@ -1,5 +1,5 @@
 #include "../include/prototype.h"
-#include "ara/nm/NetworkState_Handle0Impl.hpp"
+#include "ara/nm/NetworkState_HandleImpl.hpp"
 #include "ara/com/com_set_handler.hpp"
 
 #include <chrono>
@@ -77,9 +77,13 @@ int main() {
         std::string input;
         std::cin >> input;
         if (input == "on") {
-            handlers[&networkHandle.NetworkRequestedState](ara::nm::NetworkStateType::kFullCom);
+            for (auto &handle: handlers[&networkHandle.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kFullCom);
+            }
         } else if (input == "off") {
-            handlers[&networkHandle.NetworkRequestedState](ara::nm::NetworkStateType::kNoCom);
+            for (auto &handle: handlers[&networkHandle.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kNoCom);
+            }
         } else {
             break;
         }

@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 11)
 #include_directories(src/ara/nm)
 
 add_executable(APNM src/main.cpp
+        src/main1.cpp
+        src/main2.cpp
+        src/main3.cpp
         socket/socket.cpp
         src/ara/nm/CallbackTimer.cpp
         src/ara/nm/NetworkState_Handle0Impl.cpp

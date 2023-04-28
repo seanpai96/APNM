@@ -1,5 +1,5 @@
 #include "../include/prototype.h"
-#include "ara/nm/NetworkState_Handle0Impl.hpp"
+#include "ara/nm/NetworkState_HandleImpl.hpp"
 #include "ara/com/com_set_handler.hpp"
 
 #include <chrono>
@@ -73,19 +73,27 @@ int main() {
     //controls cluster 1
     ara::nm::NetworkState_HandleImpl networkHandle0(ara::com::InstanceIdentifier{}, 0);
     //controls cluster 2
-    ara::nm::NetworkStatte_HandleImpl networkHandle1(ara::com::InstanceIdentifier{}, 2);
+    ara::nm::NetworkState_HandleImpl networkHandle1(ara::com::InstanceIdentifier{}, 2);
 
     while(true) {
         std::string input;
         std::cin >> input;
         if (input == "on1") {
-            handlers[&networkHandle0.NetworkRequestedState](ara::nm::NetworkStateType::kFullCom);
+            for (auto &handle: handlers[&networkHandle0.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kFullCom);
+            }
         } else if (input == "on2") {
-            handlers[&networkHandle1.NetworkRequestedState](ara::nm::NetworkStateType::kFullCom);
+            for (auto &handle: handlers[&networkHandle1.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kFullCom);
+            }
         } else if (input == "off1") {
-            handlers[&networkHandle0.NetworkRequestedState](ara::nm::NetworkStateType::kNoCom);
+            for (auto &handle: handlers[&networkHandle0.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kNoCom);
+            }
         } else if (input == "off2") {
-            handlers[&networkHandle1.NetworkRequestedState](ara::nm::NetworkStateType::kNoCom);
+            for (auto &handle: handlers[&networkHandle1.NetworkRequestedState]) {
+                handle(ara::nm::NetworkStateType::kNoCom);
+            }
         } else {
             break;
         }
