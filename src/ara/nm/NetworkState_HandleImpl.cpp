@@ -30,7 +30,6 @@ NetworkState_HandleImpl::NetworkState_HandleImpl(
     initialize();
 }
 
-ara::core::Vector<Machine *> machines;
 
 NetworkState_HandleImpl::~NetworkState_HandleImpl() {
     for (auto &machineThread: machines) {
@@ -39,8 +38,8 @@ NetworkState_HandleImpl::~NetworkState_HandleImpl() {
     }
 }
 
-ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(ara::nm::NetworkStateType newValue) {
-    for (auto &machineThread: machines) {
+ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(NetworkState_HandleImpl *handle,ara::nm::NetworkStateType newValue) {
+    for (auto &machineThread: handle -> machines) {
         //[SWS_ANM_00084], here we notify every network so they know whether they're requested
         machineThread -> stateMachine -> setRequested(newValue == ara::nm::NetworkStateType::kFullCom);
     }
@@ -61,7 +60,9 @@ int NetworkState_HandleImpl::getEthernetConnectorNumber() {
 }
 
 void NetworkState_HandleImpl::initialize() {
-    NetworkRequestedState.RegisterSetHandler(networkRequestedStateSetHandler);
+    NetworkRequestedState.RegisterSetHandler([&](ara::nm::NetworkStateType newValue) {
+        return networkRequestedStateSetHandler(this, newValue);
+    });
     for (int i = 0; i < this->getEthernetConnectorNumber(); i++) {
         Machine *machine = new Machine();
         machines.emplace_back(machine);

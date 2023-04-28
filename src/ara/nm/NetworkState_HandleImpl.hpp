@@ -41,6 +41,7 @@ namespace ara {
             NetworkState_HandleImpl& operator=(const NetworkState_HandleImpl& other) = delete;
 
             void updateNetworkCurrentState();
+	    ara::core::Vector<Machine *> machines;
 
             private:
             void initialize();
