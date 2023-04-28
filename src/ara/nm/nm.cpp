@@ -13,7 +13,7 @@ namespace ara {
             socket.setServerAndBind(cluster->networkConfiguration.ipv4MulticastipAaddress);
             socket.setServerLoopBack();
 
-            socket.setClientAndBind();
+            socket.setClientAndBind(cluster->networkConfiguration.ipv4MulticastipAaddress);
             socket.setClientAddGroup(cluster->networkConfiguration.ipv4MulticastipAaddress);
         }
 
