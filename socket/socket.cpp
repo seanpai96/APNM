@@ -113,7 +113,7 @@ public:
         }
         return 1;
     }
-    int setCleintAddGroup(std::string str){
+    int setClientAddGroup(std::string str){
         stMreqClient.imr_multiaddr.s_addr = inet_addr(str.c_str());
         stMreqClient.imr_interface.s_addr = htonl(INADDR_ANY); 
         int err = setsockopt(sock_Client, IPPROTO_IP, IP_ADD_MEMBERSHIP, &stMreqClient, sizeof(stMreqClient));
