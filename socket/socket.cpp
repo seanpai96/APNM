@@ -141,7 +141,7 @@ public:
             return 1;
         }
     }
-    int clientLeaveGroup(){
+    void clientLeaveGroup(){
         setsockopt(sock_Client, IPPROTO_IP, IP_DROP_MEMBERSHIP, &stMreqClient, sizeof(stMreqClient));
     }
     void closeClientSocket(){

@@ -24,6 +24,7 @@ namespace ara {
 
         void NMInstance::StopInstance() {
             timer.stop();
+            socket.clientLeaveGroup();
             state = NMInstanceState::NM_STATE_INIT;
         }
 
