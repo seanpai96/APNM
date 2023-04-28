@@ -36,7 +36,9 @@ int main() {
     cluster.nmUserDataOffset = 3;
     cluster.nmWaitBusSleepTime = 20;
     cluster.pncClusterVectorLength = 0;
-    cluster.networkConfiguration.ipv4MulticastipAaddress = "255.255.255.255";
+
+    //set muticast IP address
+    cluster.networkConfiguration.ipv4MulticastipAaddress = "224.0.0.0";
 
 
     //cluster.nmNode = vector<NmNode *>{ &node0, &node1 };
