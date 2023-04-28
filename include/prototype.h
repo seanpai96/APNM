@@ -21,7 +21,7 @@ class PhysicalChannel{
 
 };
 
-class EtheretConmmunicationConnector{
+class EthernetCommunicationConnector{
 
 };
 
@@ -62,7 +62,7 @@ class NmNode{                                   //this is abstract alse, as NmCl
 class UdpNmNode : public NmNode{
     public:
         bool allNmMessagesKeepAwake;            //Specifies if Nm drops irrelevant NM PDUs
-        EtheretConmmunicationConnector* communicationConnector; 
+        EthernetCommunicationConnector* communicationConnector; 
         TimeValue nmMsgCycleOffset;              //Node specific time offset in the periodic transmission node
 };
 
@@ -107,7 +107,7 @@ class NmConfig{
 class NmNetworkHandle{
     public:
         vector<PncMappingIdent> partialNetwork;         //reference to a pnc that included in this handle
-        vector<EtheretConmmunicationConnector*> vlan;   //reference to vlan that included in this handle, use pointer type to identify
+        vector<EthernetCommunicationConnector*> vlan;   //reference to vlan that included in this handle, use pointer type to identify
 };
 
 class NmInstantiation{

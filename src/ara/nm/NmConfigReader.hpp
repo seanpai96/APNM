@@ -12,7 +12,7 @@
 class NmConfigReader {
 private:
     //map EthernetCommunicationConnector to Pair<cluster index in NmConfig, node index in NmNode>
-    std::unordered_map<EtheretConmmunicationConnector *, pair<int, int>> connectorToIndices;
+    std::unordered_map<EthernetCommunicationConnector *, pair<int, int>> connectorToIndices;
     void initializeMaps() {
         for (int i = 0; i < nmConfig.nmCluster.size(); i++) {
             auto cluster = nmConfig.nmCluster[i];
@@ -25,7 +25,7 @@ private:
         }
     }
 public:
-    UdpNmNode *operator[](EtheretConmmunicationConnector *connector) {
+    UdpNmNode *operator[](EthernetCommunicationConnector *connector) {
         if (connectorToIndices.empty()) initializeMaps();
         auto indices = connectorToIndices[connector];
         return (UdpNmNode *)nmConfig.nmCluster[indices.first] -> nmNode[indices.second];

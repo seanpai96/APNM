@@ -1,5 +1,5 @@
 #include "../include/prototype.h"
-#include "ara/nm/NetworkState_HandleImpl.hpp"
+#include "ara/nm/NetworkState_Handle0Impl.hpp"
 #include "ara/com/com_set_handler.hpp"
 
 #include <chrono>
@@ -70,20 +70,20 @@ int main() {
             {{}, {&connector3}}
     };
 
-    //handle started
-    // ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 0);
+    //in cluster 1
+    ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 1);
 
-    // while(true) {
-    //     std::string input;
-    //     std::cin >> input;
-    //     if (input == "on") {
+    while(true) {
+        std::string input;
+        std::cin >> input;
+        if (input == "on") {
+            handlers[&networkHandle.NetworkRequestedState](ara::nm::NetworkStateType::kFullCom);
+        } else if (input == "off") {
+            handlers[&networkHandle.NetworkRequestedState](ara::nm::NetworkStateType::kNoCom);
+        } else {
+            break;
+        }
+    }
 
-    //     } else if (input == "off") {
-
-    //     } else {
-    //         break;
-    //     }
-    // }
-
-    // networkHandle.StopOfferService();
+    networkHandle.StopOfferService();
 }

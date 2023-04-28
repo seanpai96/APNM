@@ -1,7 +1,7 @@
 #ifndef ARA_NM_NETWORK_STATE_HANDLE_0_IMPL_H_
 #define ARA_NM_NETWORK_STATE_HANDLE_0_IMPL_H_
 
-#include "NetworkState_Handle0Skeleton.hpp"
+#include "NetworkState_HandleSkeleton.hpp"
 #include "../com/fakecom.hpp"
 #include "../core/result.h"
 #include "IStateMachine.hpp"
@@ -44,7 +44,7 @@ namespace ara {
 
             private:
             void initialize();
-            IStateMachine *createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
+            IStateMachine *createMachine(EthernetCommunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
             int getEthernetConnectorNumber();
             
             NmNetworkHandle &handle; // = nmInstantiation.networkHandle[0];

@@ -4,7 +4,7 @@
 #include <map>
 #include "../core/vector.h"
 #include "../core/future.h"
-#include "../nm/NetworkState_Handle0Skeleton.hpp"
+#include "../nm/NetworkState_HandleSkeleton.hpp"
 #include "../nm/NetworkStateType.hpp"
 using ara::nm::skeleton::fields::NetworkRequestedState;
 using ara::nm::NetworkStateType;
