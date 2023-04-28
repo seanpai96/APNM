@@ -104,9 +104,9 @@ public:
         }
         return 1;
     }
-    int setClientLoopBack(){
-        int loop = 1;
-        int err = setsockopt(sock_Client, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
+    int setServerLoopBack(){
+        int loop = 0;
+        int err = setsockopt(sock_Server, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
         if (err < 0) {
             std::cerr << "setsockopt():IP_MULTICAST_LOOP"<< strerror(errno) << std::endl;
             return 0;
