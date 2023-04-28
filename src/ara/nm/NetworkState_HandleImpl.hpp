@@ -25,20 +25,20 @@ namespace ara {
         //This class locates in ara::nm namespace since [SWS_ANM_91000] states that 
         //ara::nm is the namespace of NetworkState (the interface of our service)
         using skeleton::NetworkState_HandleSkeleton;
-        <template int HANDLE>
-        class NetworkState_HandleImpl: public NetworkState_HandleSkeleton<HANDLE> {
+
+        class NetworkState_HandleImpl: public NetworkState_HandleSkeleton {
             friend IStateMachine;
             public:
             //Here 3 types of constructors are all provided, but mode is not settable (we'll only use kEventSingleThread)
             //we're not going to deal with kEvent and KPoll
-            NetworkState_HandleImpl(ara::com::InstanceIdentifier instanceIdentifier);
-            NetworkState_HandleImpl(ara::com::InstanceIdentifierContainer instanceIds);
-            NetworkState_HandleImpl(ara::core::InstanceSpecifier instanceSpec);
+            NetworkState_HandleImpl(ara::com::InstanceIdentifier instanceIdentifier, int handlerIndex);
+            NetworkState_HandleImpl(ara::com::InstanceIdentifierContainer instanceIds, int handlerIndex);
+            NetworkState_HandleImpl(ara::core::InstanceSpecifier instanceSpec, int handlerIndex);
             ~NetworkState_HandleImpl();
 
             //the implementation also prohibit copy constructor and copy assignment
-            NetworkState_HandleImpl(const NetworkState_HandleImpl<HANDLE>& other) = delete;
-            NetworkState_HandleImpl<HANDLE>& operator=(const NetworkState_HandleImpl<HANDLE>& other) = delete;
+            NetworkState_HandleImpl(const NetworkState_HandleImpl& other) = delete;
+            NetworkState_HandleImpl& operator=(const NetworkState_HandleImpl& other) = delete;
 
             void updateNetworkCurrentState();
 
@@ -46,13 +46,15 @@ namespace ara {
             void initialize();
             IStateMachine *createMachine(EtheretConmmunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
             int getEthernetConnectorNumber();
+            
+            NmNetworkHandle &handle; // = nmInstantiation.networkHandle[0];
         };
     }
 }
 
 struct Machine {
     IStateMachine *stateMachine;
-    ara::nm::NetworkState_Handle0Impl *handle;
+    ara::nm::NetworkState_HandleImpl *handle;
 
     bool machineInNetworkMode = false;
     std::function<void(bool)> machineStateChangeCallback = [this](bool isToNetworkMode) {

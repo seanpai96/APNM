@@ -38,7 +38,7 @@ int main() {
     cluster.pncClusterVectorLength = 0;
 
     //set muticast IP address
-    cluster.networkConfiguration.ipv4MulticastipAaddress = "224.0.0.0";
+    cluster.networkConfiguration.ipv4MulticastipAaddress = "224.0.0.6";
 
 
     //cluster.nmNode = vector<NmNode *>{ &node0, &node1 };
@@ -48,13 +48,14 @@ int main() {
     nmConfig.nmCluster = vector<NmCluster *>{ &cluster };
 
     nmInstantiation.networkHandle = vector<NmNetworkHandle>{
+            {{}, {&connector0}},
             {{}, {&connector1}}
     };
 
     //handle started
-    ara::nm::NetworkState_Handle0Impl networkHandle(ara::com::InstanceIdentifier{});
+    ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 0);
     for (auto &handler: handlers[&networkHandle.NetworkRequestedState]) {
-        handler(ara::nm::NetworkStateType::kFullCom);
+//        handler(ara::nm::NetworkStateType::kFullCom);
     }
 
     int i;

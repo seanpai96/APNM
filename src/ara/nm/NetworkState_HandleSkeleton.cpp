@@ -7,68 +7,58 @@
 //These content should be generated, but sadly we don't have a generator
 using ara::nm::skeleton::NetworkState_HandleSkeleton;
 //constructors
-<template int HANDLE>
-NetworkState_HandleSkeleton<HANDLE>::NetworkState_HandleSkeleton(
+NetworkState_HandleSkeleton::NetworkState_HandleSkeleton(
     ara::com::InstanceIdentifier instanceId,
     ara::com::MethodCallProcessingMode mode
 ) { }
 
-<template int HANDLE>
-NetworkState_HandleSkeleton<HANDLE>::NetworkState_HandleSkeleton(
+NetworkState_HandleSkeleton::NetworkState_HandleSkeleton(
     ara::com::InstanceIdentifierContainer instanceIds,
     ara::com::MethodCallProcessingMode mode
 ) { }
 
-<template int HANDLE>
-NetworkState_HandleSkeleton<HANDLE>::NetworkState_HandleSkeleton(
+NetworkState_HandleSkeleton::NetworkState_HandleSkeleton(
     ara::core::InstanceSpecifier instanceSpec,
     ara::com::MethodCallProcessingMode mode
 ) { }
 
-<template int HANDLE>
-ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> NetworkState_HandleSkeleton::Create(
+ara::core::Result<NetworkState_HandleSkeleton> NetworkState_HandleSkeleton::Create(
     const ara::com::InstanceIdentifier &instanceID,
     ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle0Skeleton>(
-            NetworkState_Handle0Skeleton(instanceID, mode)
+    return ara::core::Result<NetworkState_HandleSkeleton>(
+            NetworkState_HandleSkeleton(instanceID, mode)
     );
 }
 
-<template int HANDLE>
-ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> NetworkState_HandleSkeleton::Create(
+ara::core::Result<NetworkState_HandleSkeleton> NetworkState_HandleSkeleton::Create(
     const ara::com::InstanceIdentifierContainer &instanceIDs,
     ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle0Skeleton>(
-            NetworkState_Handle0Skeleton(instanceIDs, mode)
+    return ara::core::Result<NetworkState_HandleSkeleton>(
+            NetworkState_HandleSkeleton(instanceIDs, mode)
     );
 }
 
-<template int HANDLE>
-ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> NetworkState_HandleSkeleton::Create(
+ara::core::Result<NetworkState_HandleSkeleton> NetworkState_HandleSkeleton::Create(
     const ara::core::InstanceSpecifier &instanceSpec,
     ara::com::MethodCallProcessingMode mode
 ) noexcept {
-    return ara::core::Result<NetworkState_Handle0Skeleton>(
-            NetworkState_Handle0Skeleton(instanceSpec, mode)
+    return ara::core::Result<NetworkState_HandleSkeleton>(
+            NetworkState_HandleSkeleton(instanceSpec, mode)
     );
 }
 
-<template int HANDLE>
-ara::nm::skeleton::NetworkState_HandleSkeleton<HANDLE>::~NetworkState_HandleSkeleton() { }
+ara::nm::skeleton::NetworkState_HandleSkeleton::~NetworkState_HandleSkeleton() { }
 
-<template int HANDLE>
-ara::core::Result<void> NetworkState_HandleSkeleton<HANDLE>::OfferService() {
+ara::core::Result<void> NetworkState_HandleSkeleton::OfferService() {
     //By AUTOSAR_EXP_ARAComAPI 5.4.8.3, OfferService should return error if there's any field without SetHandler
     //Here the check is ignored, since it's an ara::com feature, rather than ara::nm
     return ara::core::Result<void>();
 }
 
-<template int HANDLE>
-void NetworkState_HandleSkeleton<HANDLE>::StopOfferService() { }
+void NetworkState_HandleSkeleton::StopOfferService() { }
 
-<template int HANDLE>
 ara::core::Future<bool> NetworkState_HandleSkeleton::ProcessNextMethodCall() {
     auto promise = ara::core::Promise<bool>();
     //always return false here, we only use kEvent mode

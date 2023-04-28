@@ -43,7 +43,6 @@ namespace ara {
                 };
             }
 
-            <template int HANDLE>
             class NetworkState_HandleSkeleton {
             public:
                 //constructors
@@ -53,7 +52,7 @@ namespace ara {
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton> Create(
                     const ara::com::InstanceIdentifier &instanceID,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
@@ -66,7 +65,7 @@ namespace ara {
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton> Create(
                     const ara::com::InstanceIdentifierContainer &instanceIDs,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
@@ -79,18 +78,18 @@ namespace ara {
                         ara::com::MethodCallProcessingMode::kEvent
                 );
 
-                static ara::core::Result<NetworkState_HandleSkeleton<HANDLE>> Create(
+                static ara::core::Result<NetworkState_HandleSkeleton> Create(
                     const ara::core::InstanceSpecifier &instanceSpec,
                     ara::com::MethodCallProcessingMode mode =
                         ara::com::MethodCallProcessingMode::kEvent
                 ) noexcept;
 
                 //prohibited constructor/operator
-                NetworkState_HandleSkeleton(const NetworkState_HandleSkeleton<HANDLE>& other) = delete;
-                NetworkState_HandleSkeleton<HANDLE>& operator=(const NetworkState_Handle0Skeleton<HANDLE>& other) = delete;
+                NetworkState_HandleSkeleton(const NetworkState_HandleSkeleton& other) = delete;
+                NetworkState_HandleSkeleton& operator=(const NetworkState_HandleSkeleton& other) = delete;
 
                 //destructor
-                ~NetworkState_Handle0Skeleton();
+                ~NetworkState_HandleSkeleton();
 
                 ara::core::Result<void> OfferService();
                 void StopOfferService();
@@ -98,9 +97,6 @@ namespace ara {
 
                 fields::NetworkCurrentState NetworkCurrentState;
                 fields::NetworkRequestedState NetworkRequestedState;
-            protected:
-                //This file should be generated, so corresponding NmNetworkHandle is hard-coded here
-                NmNetworkHandle &handle = nmInstantiation.networkHandle[0];
             };
         }
     }
