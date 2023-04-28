@@ -133,7 +133,7 @@ public:
 
         if(n == -1 || buffer[1] == node){
             if (buffer[1] == node){
-                std::cout << "receive broadcast from " << buffer[1]+'0' << std::endl;
+                std::cout << "receive broadcast from myself which is " << buffer[1]+'0' << std::endl;
             }
             return 0;
         }else{
