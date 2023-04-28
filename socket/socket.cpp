@@ -60,6 +60,15 @@ public:
         std::cout << "Binding to " << inet_ntoa(server_Addr.sin_addr) << ":" << ntohs(server_Addr.sin_port) << std::endl;
         return 1;
     }
+    int setServerLoopBack(){
+        int loop = 0;
+        int err = setsockopt(sock_Server, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
+        if (err < 0) {
+            std::cerr << "setsockopt():IP_MULTICAST_LOOP"<< strerror(errno) << std::endl;
+            return 0;
+        }
+        return 1;
+    }
     // int setServerMultipleGroup(std::string addr){
     //     stMreqServer.imr_multiaddr.s_addr = inet_addr(addr.c_str());
     //     stMreqServer.imr_interface.s_addr = IP;
@@ -76,7 +85,7 @@ public:
         sendto(sock_Server,buf,4,0,(sockaddr *)&server_Addr,sizeof(server_Addr));
         return 1;
     }
-    int setClientAndBind(){
+    int setClientAndBind(std::string multicastIp){
         sock_Client = socket(AF_INET, SOCK_DGRAM, 0);
         fcntl(sock_Client, F_SETFL, O_NONBLOCK);
         if (sock_Client < 0) {
@@ -91,7 +100,7 @@ public:
         sockaddr_in client_Addr;
         memset(&client_Addr, 0, sizeof(client_Addr));
         client_Addr.sin_family = AF_INET;
-        client_Addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        client_Addr.sin_addr.s_addr = inet_addr(multicastIp.c_str());
         // client_Addr.sin_addr.s_addr = inet_addr("127.0.0.1");
         client_Addr.sin_port = htons(port);
         //std::cout << "Binding to " << inet_ntoa(client_Addr.sin_addr) << ":" << ntohs(client_Addr.sin_port) << std::endl;
@@ -104,18 +113,9 @@ public:
         }
         return 1;
     }
-    int setServerLoopBack(){
-        int loop = 0;
-        int err = setsockopt(sock_Server, IPPROTO_IP, IP_MULTICAST_LOOP, &loop, sizeof(loop));
-        if (err < 0) {
-            std::cerr << "setsockopt():IP_MULTICAST_LOOP"<< strerror(errno) << std::endl;
-            return 0;
-        }
-        return 1;
-    }
     int setClientAddGroup(std::string str){
         stMreqClient.imr_multiaddr.s_addr = inet_addr(str.c_str());
-        stMreqClient.imr_interface.s_addr = htonl(INADDR_ANY); 
+        stMreqClient.imr_interface.s_addr = htonl(INADDR_ANY);
         int err = setsockopt(sock_Client, IPPROTO_IP, IP_ADD_MEMBERSHIP, &stMreqClient, sizeof(stMreqClient));
         if (err < 0) {
             std::cerr << "setsockopt():IP_ADD_MEMBERSHIP"<< strerror(errno) << std::endl;
