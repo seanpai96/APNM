@@ -4,7 +4,7 @@
 #include "ixwebsocket/IXWebSocketServer.h"
 #include <string>
 
-ix::WebSocketServer WSServer(80, "0.0.0.0");
+extern ix::WebSocketServer WSServer;
 
 void WSBroadcast(std::string msg);
 void WSStartServer();

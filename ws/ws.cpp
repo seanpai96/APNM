@@ -3,6 +3,8 @@
 
 bool isWSServerStarted = false;
 
+ix::WebSocketServer WSServer(8080, "0.0.0.0");
+
 void WSBroadcast(std::string msg) {
     if (!isWSServerStarted) return;         //prevent crash when server is not started
     for (auto& connection : WSServer.getClients()) {
