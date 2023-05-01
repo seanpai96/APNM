@@ -1,6 +1,8 @@
 #include "../include/prototype.h"
 #include "ara/nm/NetworkState_HandleImpl.hpp"
 #include "ara/com/com_set_handler.hpp"
+#include "../ws/ws.hpp"
+#include "../include/nlohmann/json.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -72,6 +74,33 @@ int main() {
 
     //in cluster 1
     ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 3);
+
+    // initialize WSServer
+    WSServer.setOnClientMessageCallback([&networkHandle](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg) {
+        if (msg->type == ix::WebSocketMessageType::Message) {
+            std::cout << msg->str << std::endl;
+            // webSocket.send(msg->str);
+
+            auto json = nlohmann::json::parse(msg->str);
+            std::cout << json["nodeID"] << ' ' << json["NetworkRequested"] << std::endl;
+            if (json["NetworkRequested"]) {
+                if (json["nodeID"] == 3) {
+                    for (auto &handle : handlers[&networkHandle.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kFullCom);
+                    }
+                }
+            } else {
+                if (json["nodeID"] == 3) {
+                    for (auto &handle : handlers[&networkHandle.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kNoCom);
+                    }
+                }
+            }
+        } else if (msg->type == ix::WebSocketMessageType::Open) {
+            std::cout << "New connection" << std::endl;
+        }
+    });
+    WSStartServer();
 
     while(true) {
         std::string input;

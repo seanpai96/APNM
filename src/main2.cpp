@@ -1,9 +1,11 @@
-#include "../include/prototype.h"
-#include "ara/nm/NetworkState_HandleImpl.hpp"
-#include "ara/com/com_set_handler.hpp"
-
 #include <chrono>
 #include <iostream>
+
+#include "../include/nlohmann/json.hpp"
+#include "../include/prototype.h"
+#include "../ws/ws.hpp"
+#include "ara/com/com_set_handler.hpp"
+#include "ara/nm/NetworkState_HandleImpl.hpp"
 
 void initNode(UdpNmNode &node, int id, EthernetCommunicationConnector *connector) {
     // here we don't initialize node.machine, it's not in use
@@ -72,6 +74,33 @@ int main() {
 
     //in cluster 1
     ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 1);
+
+    // initialize WSServer
+    WSServer.setOnClientMessageCallback([&networkHandle](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg) {
+        if (msg->type == ix::WebSocketMessageType::Message) {
+            std::cout << msg->str << std::endl;
+            // webSocket.send(msg->str);
+
+            auto json = nlohmann::json::parse(msg->str);
+            std::cout << json["nodeID"] << ' ' << json["NetworkRequested"] << std::endl;
+            if (json["NetworkRequested"]) {
+                if (json["nodeID"] == 1) {
+                    for (auto &handle : handlers[&networkHandle.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kFullCom);
+                    }
+                }
+            } else {
+                if (json["nodeID"] == 1) {
+                    for (auto &handle : handlers[&networkHandle.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kNoCom);
+                    }
+                }
+            }
+        } else if (msg->type == ix::WebSocketMessageType::Open) {
+            std::cout << "New connection" << std::endl;
+        }
+    });
+    WSStartServer();
 
     while(true) {
         std::string input;
