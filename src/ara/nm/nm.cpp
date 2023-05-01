@@ -2,9 +2,13 @@
 #define ARA_NM_NM_CPP_
 
 #include "nm.hpp"
-#include <iostream>
+#include "../../../include/nlohmann/json.hpp"
+#include "../../../ws/ws.hpp"
 
-//#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+
+// #include <bits/stdc++.h>
 
 namespace ara {
     namespace nm {
@@ -57,31 +61,49 @@ namespace ara {
         void NMInstance::Tick() {
             _ticks++;
             char nodeIDChar = node->nmNodeId;
-            if(state == NMInstanceState::NM_STATE_INIT)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+            std::string currentState;
+            if (state == NMInstanceState::NM_STATE_INIT) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_INIT" << std::endl;
-            else if(state == NMInstanceState::NM_STATE_BUS_SLEEP)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_INIT";
+            } else if (state == NMInstanceState::NM_STATE_BUS_SLEEP) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_BUS_SLEEP" << std::endl;
-            else if(state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_BUS_SLEEP";
+            } else if (state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_PREPARE_BUS_SLEEP" << std::endl;
-            else if(state == NMInstanceState::NM_STATE_REPEAT_MESSAGE)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_PREPARE_BUS_SLEEP";
+            } else if (state == NMInstanceState::NM_STATE_REPEAT_MESSAGE) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_REPEAT_MESSAGE" << std::endl;
-            else if(state == NMInstanceState::NM_STATE_NORMAL_OPERATION)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_REPEAT_MESSAGE";
+            } else if (state == NMInstanceState::NM_STATE_NORMAL_OPERATION) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_NORMAL_OPERATION" << std::endl;
-            else if(state == NMInstanceState::NM_STATE_READY_SLEEP)
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_NORMAL_OPERATION";
+            } else if (state == NMInstanceState::NM_STATE_READY_SLEEP) {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_READY_SLEEP" << std::endl;
-            else
-                std::cout << "NodeID: " << node -> nmNodeId << " Tick: " << _ticks << " current_state: "
+                currentState = "NM_STATE_READY_SLEEP";
+            } else {
+                std::cout << "NodeID: " << node->nmNodeId << " Tick: " << _ticks << " current_state: "
                           << "NM_STATE_UNKNOWN" << std::endl;
+                currentState = "NM_STATE_UNKNOWN";
+            }
+
+            nlohmann::json j;
+            j["nodeID"] = node->nmNodeId;
+            j["CurrentState"] = currentState;
+            j["NetworkRequested"] = isNetworkRequested;
+            std::string jsonString = j.dump();
+
+            WSBroadcast(jsonString);
+
             // check nmMessage
             if (socket.receiveBroadcast(nodeIDChar) == 1) {
                 recievedNmMsg = true;
-                std::cout<<"recievedNmMsg = true"<<std::endl;
+                std::cout << "recievedNmMsg = true" << std::endl;
                 // recived nmMessage, restart timeout timer
                 RestartTimeoutTimer();
             } else {
@@ -100,9 +122,9 @@ namespace ara {
                     isNmTimeoutTimerRunning = true;
                     nmTimeoutTimerTicks = 0;
                     nmImmediateCycleTimerTicks = 0;
-                    immediateCycleTimes = cluster -> nmImmediateNmTransmissions;
+                    immediateCycleTimes = cluster->nmImmediateNmTransmissions;
 
-                    nmMsgCycleOffsetRemainingTicks = node -> nmMsgCycleOffset;
+                    nmMsgCycleOffsetRemainingTicks = node->nmMsgCycleOffset;
                 }
                 // bus sleep finish
             } else if (state == NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP) {  // prepare bus sleep
@@ -115,10 +137,10 @@ namespace ara {
                     isNmTimeoutTimerRunning = true;
                     nmTimeoutTimerTicks = 0;
                     nmImmediateCycleTimerTicks = 0;
-                    immediateCycleTimes = cluster -> nmImmediateNmTransmissions;
-                    nmMsgCycleOffsetRemainingTicks = node -> nmMsgCycleOffset;
+                    immediateCycleTimes = cluster->nmImmediateNmTransmissions;
+                    nmMsgCycleOffsetRemainingTicks = node->nmMsgCycleOffset;
                 } else if (isNmWaitBusSleepTimerRunning) {
-                    if (nmWaitBusSleepTimerTicks >= cluster -> nmWaitBusSleepTime) {
+                    if (nmWaitBusSleepTimerTicks >= cluster->nmWaitBusSleepTime) {
                         // wait bus sleep timeout, enter bus sleep mode
                         state = NMInstanceState::NM_STATE_BUS_SLEEP;
                         isNmWaitBusSleepTimerRunning = false;
@@ -130,10 +152,10 @@ namespace ara {
                 // prepare bus sleep finish
             } else if (state == NMInstanceState::NM_STATE_REPEAT_MESSAGE) {  // repeat message
                 bool isInOffset = false;
-                if(nmMsgCycleOffsetRemainingTicks >= 0){
+                if (nmMsgCycleOffsetRemainingTicks >= 0) {
                     nmMsgCycleOffsetRemainingTicks--;
                     isInOffset = true;
-                }else{
+                } else {
                     isInOffset = false;
                 }
 
@@ -147,7 +169,7 @@ namespace ara {
                         nmRepeatMessageTimerTicks = 0;
                         nmMsgCycleTimerTicks = 0;
                     } else {
-                        if (nmImmediateCycleTimerTicks >= cluster -> nmImmediateNmCycleTime) {
+                        if (nmImmediateCycleTimerTicks >= cluster->nmImmediateNmCycleTime) {
                             // send immediate message
                             socket.serverSendBuffer(nodeIDChar);
                             RestartTimeoutTimer();  // message sent, restart timeout timer
@@ -158,7 +180,7 @@ namespace ara {
                         }
                     }
                 } else if (isNmRepeatMessageTimerRunning && !isInOffset) {
-                    if (nmRepeatMessageTimerTicks >= cluster -> nmRepeatMessageTime) {
+                    if (nmRepeatMessageTimerTicks >= cluster->nmRepeatMessageTime) {
                         // repeat message timeout, check request network state
                         isNmRepeatMessageTimerRunning = false;
                         nmRepeatMessageTimerTicks = 0;
@@ -174,7 +196,7 @@ namespace ara {
                     } else {
                         nmRepeatMessageTimerTicks++;
                         if (isNmMsgCycleTimerRunning) {
-                            if (nmMsgCycleTimerTicks >= cluster -> nmMsgCycleTime) {
+                            if (nmMsgCycleTimerTicks >= cluster->nmMsgCycleTime) {
                                 // send repeat message
                                 socket.serverSendBuffer(nodeIDChar);  // message sent, restart timeout timer
                                 RestartTimeoutTimer();
@@ -186,7 +208,7 @@ namespace ara {
                     }
                 }
                 if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster -> nmNetworkTimeout) {
+                    if (nmTimeoutTimerTicks >= cluster->nmNetworkTimeout) {
                         RestartTimeoutTimer();
                     } else {
                         nmTimeoutTimerTicks++;
@@ -200,7 +222,7 @@ namespace ara {
                     isNmMsgCycleTimerRunning = false;
                     nmMsgCycleTimerTicks = 0;
                 } else if (isNmMsgCycleTimerRunning) {
-                    if (nmMsgCycleTimerTicks >= cluster -> nmMsgCycleTime) {
+                    if (nmMsgCycleTimerTicks >= cluster->nmMsgCycleTime) {
                         // send Nm message
                         socket.serverSendBuffer(nodeIDChar);  // message sent, restart timeout timer
                         RestartTimeoutTimer();
@@ -210,7 +232,7 @@ namespace ara {
                     }
                 }
                 if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster -> nmNetworkTimeout) {
+                    if (nmTimeoutTimerTicks >= cluster->nmNetworkTimeout) {
                         RestartTimeoutTimer();
                     } else {
                         nmTimeoutTimerTicks++;
@@ -224,7 +246,7 @@ namespace ara {
                     isNmMsgCycleTimerRunning = true;
                     nmMsgCycleTimerTicks = 0;
                 } else if (isNmTimeoutTimerRunning) {
-                    if (nmTimeoutTimerTicks >= cluster -> nmNetworkTimeout) {
+                    if (nmTimeoutTimerTicks >= cluster->nmNetworkTimeout) {
                         // timeout, enter prepare bus sleep state
                         onStateChangeToNetwork(false);
                         state = NMInstanceState::NM_STATE_PREPARE_BUS_SLEEP;

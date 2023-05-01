@@ -1,6 +1,8 @@
 #include "../include/prototype.h"
 #include "ara/nm/NetworkState_HandleImpl.hpp"
 #include "ara/com/com_set_handler.hpp"
+#include "ws/ws.hpp"
+#include "include/nlohmann/json.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -70,10 +72,46 @@ int main() {
             {{}, {&connector3}}
     };
 
+
     //controls cluster 1
     ara::nm::NetworkState_HandleImpl networkHandle0(ara::com::InstanceIdentifier{}, 0);
     //controls cluster 2
     ara::nm::NetworkState_HandleImpl networkHandle1(ara::com::InstanceIdentifier{}, 2);
+
+    //initialize WSServer
+    WSServer.setOnClientMessageCallback([](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg) {
+        if (msg->type == ix::WebSocketMessageType::Message) {
+            std::cout << msg->str << std::endl;
+            // webSocket.send(msg->str);
+
+            auto json = nlohmann::json::parse(msg->str);
+            if (json["NetworkRequested"]){
+                if(json["NodeID"] == 0){
+                    for (auto &handle: handlers[&networkHandle0.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kFullCom);
+                    }
+                }else if(json["NodeID"] == 2){
+                    for (auto &handle: handlers[&networkHandle1.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kFullCom);
+                    }
+                }
+            }else{
+                if(json["NodeID"] == 0){
+                    for (auto &handle: handlers[&networkHandle0.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kNoCom);
+                    }
+                }else if(json["NodeID"] == 2){
+                    for (auto &handle: handlers[&networkHandle1.NetworkRequestedState]) {
+                        handle(ara::nm::NetworkStateType::kNoCom);
+                    }
+                }
+            }
+        } else if (msg->type == ix::WebSocketMessageType::Open) {
+            std::cout << "New connection" << std::endl;
+        }
+    });
+    WSStartServer();
+
 
     while(true) {
         std::string input;
@@ -101,4 +139,5 @@ int main() {
 
     networkHandle0.StopOfferService();
     networkHandle1.StopOfferService();
+    WSStopServer();
 }
