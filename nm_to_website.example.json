@@ -1,5 +1,5 @@
 {
-    "NodeID": 0,
+    "nodeID": 0,
     "CurrentState": "NM_STATE_BUS_SLEEP",
     "NetworkRequested": false
 }
