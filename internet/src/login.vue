@@ -2,86 +2,116 @@
   <div v-show="pageActive">
     <h1> Login </h1>
     <br>
-    <span> First IP    </span>
-    <input style="background: #fcf5ed;" v-model="ipFirst">
+    <v-sheet
+      max-width="300"
+      class="mx-auto">
+    <v-text-field
+      v-model="ipFirst"
+      label="First IP"
+      ></v-text-field>
+    </v-sheet>
+    <br>
+    <v-sheet
+        max-width="300"
+        class="mx-auto">
+    <v-text-field
+      v-model="ipSecond"
+      label="Second IP"
+      ></v-text-field>
+    </v-sheet>
+    <br>
+    <v-sheet
+        max-width="300"
+        class="mx-auto">
+    <v-text-field
+      v-model="ipThird"
+      label="Third IP"
+      ></v-text-field>
+      </v-sheet>
     <br>
     <br>
-    <span> Second IP    </span>
-    <input style="background: #fcf5ed;" v-model="ipSecond">
-    <br>
-    <br>
-    <span> Third IP    </span>
-    <input style="background: #fcf5ed;" v-model="ipThird">
-    <br>
-    <br>
-    <button style="background: #fcf5ed;" :disabled="isActive" type="button" @click="connect">submit</button>
+    <v-btn
+            color="success"
+            @click="connect"
+          >
+            Submit
+          </v-btn>
     <br>
   </div>
   <div v-show="pageActive2" class="grid-container">
-    <div class="item">
-      <span>current state : {{state["P1C1"]}}</span>
-      <br>
-      <span> PI : 1</span>
-      <br>
-      <span> Cluster : 1 </span>
-      <br>
-        <v-switch
-          v-model="toggle['P1C1']"
-          hide-details
-          true-value="yes"
-          false-value="no"
-          :label="`Switch: ${toggle['P1C1']}`"
-          @click="toggleF('P1C1')"
-        ></v-switch>
-    </div>
-    <div class="item">
-      <span>current state : {{state["P2C1"]}}</span>
-      <br>
-      <span> PI : 2</span>
-      <br>
-      <span> Cluster : 1 </span>
-      <br>
-        <v-switch
-          v-model="toggle['P2C1']"
-          hide-details
-          true-value="yes"
-          false-value="no"
-          :label="`Switch: ${toggle['P2C1']}`"
-          @click="toggleF('P2C1')"
-        ></v-switch>
-    </div>
-    <div class="item">
-      <span>current state : {{state["P2C2"]}}</span>
-      <br>
-      <span> PI : 2</span>
-      <br>
-      <span> Cluster : 2 </span>
-      <br>
-        <v-switch
-          v-model="toggle['P2C2']"
-          hide-details
-          true-value="yes"
-          false-value="no"
-          :label="`Switch: ${toggle['P2C2']}`"
-          @click="toggleF('P2C2')"
-        ></v-switch>
-    </div>
-    <div class="item">
-      <span>current state : {{state["P3C2"]}}</span>
-      <br>
-      <span> PI : 3</span>
-      <br>
-      <span> Cluster : 2 </span>
-      <br>
-        <v-switch
-          v-model="toggle['P3C2']"
-          hide-details
-          true-value="yes"
-          false-value="no"
-          :label="`Switch: ${toggle['P3C2']}`"
-          @click="toggleF('P3C2')"
-        ></v-switch>
-    </div>
+
+      <v-card color=#fcf5ed>
+        <v-card-title>
+          current state : {{ state["P1C1"] }}
+        </v-card-title>
+        <v-card-text>
+          PI : 1  <br>
+          Cluster : 1
+        </v-card-text>
+        <v-card-actions>
+          <v-switch
+            v-model="toggle['P1C1']"
+            hide-details
+            :label="`Switch: ${toggle['P1C1']}`"
+            @change="toggleF('P1C1')"
+          ></v-switch>
+        </v-card-actions>
+      </v-card>
+
+      <v-card color=#fcf5ed>
+        <v-card-title>
+          current state : {{ state["P2C1"] }}
+        </v-card-title>
+        <v-card-text>
+          PI : 2  <br>
+          Cluster : 1
+        </v-card-text>
+        <v-card-actions>
+          <v-switch
+            v-model="toggle['P2C1']"
+            hide-details
+            :label="`Switch: ${toggle['P2C1']}`"
+            @change="toggleF('P2C1')"
+          ></v-switch>
+        </v-card-actions>
+      </v-card>
+
+      <v-card color=#fcf5ed>
+        <v-card-title>
+          current state : {{ state["P2C2"] }}
+        </v-card-title>
+        <v-card-text>
+          PI : 2  <br>
+          Cluster : 2
+        </v-card-text>
+        <v-card-actions>
+          <v-switch
+            v-model="toggle['P2C2']"
+            hide-details
+            :label="`Switch: ${toggle['P2C2']}`"
+            @change="toggleF('P2C2')"
+          ></v-switch>
+        </v-card-actions>
+      </v-card>
+
+      <v-card color=#fcf5ed>
+        <v-card-title>
+          current state : {{ state["P3C2"] }}
+        </v-card-title>
+        <v-card-text>
+          PI : 3  <br>
+          Cluster : 2
+        </v-card-text>
+        <v-card-actions>
+          <v-switch
+            v-model="toggle['P3C2']"
+            hide-details
+            :label="`Switch: ${toggle['P3C2']}`"
+            @change="toggleF('P3C2')"
+          ></v-switch>
+        </v-card-actions>
+      </v-card>
+      
   </div>
 
 </template>
@@ -113,10 +143,10 @@
             },
             connectSucceed : 0,
             toggle : {
-              "P1C1":true,
-              "P2C1":true,
-              "P2C2":true,
-              "P3C2":true
+              "P1C1": false,
+              "P2C1": false,
+              "P2C2": false,
+              "P3C2": false
             },
             
             isActive : false
@@ -124,8 +154,7 @@
     },
     methods: {
         toggleF(ID){
-          if(this.toggle[ID])
-            console.log("this.toggle[ID]");
+          console.log(`${ID} switched to ${this.toggle[ID]}`);
         },
         connect(){
           // 建立 WebSocket (本例 server 端於本地運行)
@@ -191,6 +220,7 @@
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   grid-gap: 10px;
+  padding: 20px;
 }
 
 .item {
