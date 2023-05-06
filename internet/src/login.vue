@@ -220,16 +220,16 @@ export default {
         },
         handleJson(jsonString){
             let json = JSON.parse(jsonString)
-            if(json["NodeID"] == 0){
+            if(json["nodeID"] == 0){
                 this.state["P2C1"] = json["CurrentState"]
                 this.toggle["P2C1"] = json["NetworkRequested"]
-            }else if (json["NodeID"] == 1){
+            }else if (json["nodeID"] == 1){
                 this.state["P1C1"] = json["CurrentState"]
                 this.toggle["P1C1"] = json["NetworkRequested"]
-            }else if (json["NodeID"] == 2){
+            }else if (json["nodeID"] == 2){
                 this.state["P2C2"] = json["CurrentState"]
                 this.toggle["P2C2"] = json["NetworkRequested"]
-            }else if (json["NodeID"] == 3){
+            }else if (json["nodeID"] == 3){
                 this.state["P3C2"] = json["CurrentState"]
                 this.toggle["P3C2"] = json["NetworkRequested"]
             }
