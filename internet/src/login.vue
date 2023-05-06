@@ -27,9 +27,6 @@
             <v-chip class="ma-2" :color="stateColor[state['P1C1']]" size="x-large">
               {{ stateText[state['P1C1']] }}
             </v-chip>
-            <v-card-title>
-                current state : {{ state["P1C1"] }}
-            </v-card-title>
             <v-card-text>
                 PI : 1 <br>
                 Cluster : 1
@@ -45,9 +42,6 @@
             <v-chip class="ma-2" :color="stateColor[state['P2C1']]" size="x-large">
               {{ stateText[state['P2C1']] }}
             </v-chip>
-            <v-card-title>
-                current state : {{ state["P2C1"] }}
-            </v-card-title>
             <v-card-text >
                 PI : 2 <br>
                 Cluster : 1
@@ -65,9 +59,6 @@
             <v-chip class="ma-2" :color="stateColor[state['P2C2']]" size="x-large">
               {{ stateText[state['P2C2']] }}
             </v-chip>
-            <v-card-title>
-                current state : {{ state["P2C2"] }}
-            </v-card-title>
             <v-card-text>
                 PI : 2 <br>
                 Cluster : 2
@@ -83,9 +74,6 @@
             <v-chip class="ma-2" :color="stateColor[state['P3C2']]" size="x-large">
               {{ stateText[state['P3C2']] }}
             </v-chip>
-            <v-card-title>
-                current state : {{ state["P3C2"] }}
-            </v-card-title>
             <v-card-text>
                 PI : 3 <br>
                 Cluster : 2
@@ -114,6 +102,9 @@ export default {
             ipFirst: "",
             ipSecond: "",
             ipThird: "",
+            wsf: null,
+            wss: null,
+            wst: null,
             show: "all",
             undoneTasks: 0,
             doneTasks: 0,
@@ -126,6 +117,12 @@ export default {
                 "P3C2": "NM_STATE_BUS_SLEEP"
             },
             connectSucceed: 0,
+            nodeIDs: {
+                "P1C1": 1,
+                "P2C1": 0,
+                "P2C2": 2,
+                "P3C2": 3
+            },
             toggle: {
                 "P1C1": false,
                 "P2C1": false,
@@ -153,52 +150,59 @@ export default {
     methods: {
         toggleF(ID) {
             console.log(`${ID} switched to ${this.toggle[ID]}`);
+            let jsonString = JSON.stringify({
+                "nodeID": this.nodeIDs[ID],
+                "NetworkRequested": this.toggle[ID],
+            })
+            this.wsf.send(jsonString)
+            this.wss.send(jsonString)
+            this.wst.send(jsonString)
         },
         connect() {
             // 建立 WebSocket (本例 server 端於本地運行)
             this.isActive = true
             let url = 'ws://' + this.ipFirst // ws://localhost:3000
-            var wsf = new WebSocket(url)
-            wsf.onopen = () => {
-                console.log('open connection')
+            this.wsf = new WebSocket(url)
+            this.wsf.onopen = () => {
+                console.log('open connection 1')
                 this.this.dict["ipFirst"] = url
-                this.this.dict["ipWsf"] = wsf
+                this.this.dict["ipWsf"] = this.wsf
                 this.connectSucceed += 1
             }
-            wsf.onclose = () => {
+            this.wsf.onclose = () => {
                 console.log('close connection');
             }
-            wsf.onmessage = (event) => {
+            this.wsf.onmessage = (event) => {
                 console.log(event.data)
                 this.handleJson(event.data)
             }
             let urls = 'ws://' + this.ipSecond // ws://localhost:3000
-            var wss = new WebSocket(urls)
-            wss.onopen = () => {
-                console.log('open connection')
+            this.wss = new WebSocket(urls)
+            this.wss.onopen = () => {
+                console.log('open connection 2')
                 this.this.dict["ipSecond"] = urls
-                this.this.dict["ipWss"] = wss
+                this.this.dict["ipWss"] = this.wss
                 this.connectSucceed += 1
             }
-            wss.onclose = () => {
+            this.wss.onclose = () => {
                 console.log('close connection');
             }
-            wss.onmessage = (event) => {
+            this.wss.onmessage = (event) => {
                 console.log(event.data)
                 this.handleJson(event.data)
             }
-            let urlt = 'ws://' + this.pThird // ws://localhost:3000
-            var wst = new WebSocket(urlt)
-            wst.onopen = () => {
-                console.log('open connection')
+            let urlt = 'ws://' + this.ipThird // ws://localhost:3000
+            this.wst = new WebSocket(urlt)
+            this.wst.onopen = () => {
+                console.log('open connection 3')
                 this.this.dict["ipThird"] = urlt
-                this.this.dict["ipWst"] = wst
+                this.this.dict["ipWst"] = this.wst
                 this.connectSucceed += 1
             }
-            wst.onclose = () => {
+            this.wst.onclose = () => {
                 console.log('close connection');
             }
-            wst.onmessage = (event) => {
+            this.wst.onmessage = (event) => {
                 console.log(event.data)
                 this.handleJson(event.data)
             }
