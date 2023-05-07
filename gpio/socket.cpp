@@ -31,6 +31,7 @@ private:
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         io << 0;
     }
+    
 public:
     int sock_Client,sock_Server;
     int broadcast = 1;
@@ -39,7 +40,7 @@ public:
     int port = 11115;
     std::string IP;
 
-    GPIO_OUT gpio = GPIO_OUT({LED_PIN});
+    GPIO_OUT gpio{{LED_PIN}};
 
     int setServerAndBind(std::string addr){
         sock_Server = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -137,6 +138,12 @@ public:
     }
     void closeServerSocket(){
         close(sock_Server);
+    }
+    void closeSocket() {
+        clientLeaveGroup();
+        closeClientSocket();
+        closeServerSocket();
+        gpio.release_ios();
     }
     void setPort(int expect){
         port = expect;
