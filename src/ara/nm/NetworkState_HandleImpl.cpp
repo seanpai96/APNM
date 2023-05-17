@@ -8,26 +8,29 @@ using ara::nm::NetworkState_HandleImpl;
 
 NetworkState_HandleImpl::NetworkState_HandleImpl(
     ara::com::InstanceIdentifier instanceIdentifier,
-    int handlerIndex
+    int handlerIndex,
+    int gpio
 ): NetworkState_HandleSkeleton(instanceIdentifier, ara::com::MethodCallProcessingMode::kEventSingleThread), 
     handle{nmInstantiation.networkHandle[handlerIndex]} {
-    initialize();
+    initialize(gpio);
 }
 
 NetworkState_HandleImpl::NetworkState_HandleImpl(
     ara::com::InstanceIdentifierContainer instanceIds,
-    int handlerIndex
+    int handlerIndex,
+    int gpio
 ): NetworkState_HandleSkeleton(instanceIds, ara::com::MethodCallProcessingMode::kEventSingleThread),
     handle{nmInstantiation.networkHandle[handlerIndex]} {
-    initialize();
+    initialize(gpio);
 }
 
 NetworkState_HandleImpl::NetworkState_HandleImpl(
     ara::core::InstanceSpecifier instanceSpec,
-    int handlerIndex
+    int handlerIndex,
+    int gpio
 ): NetworkState_HandleSkeleton(instanceSpec, ara::com::MethodCallProcessingMode::kEventSingleThread),
     handle{nmInstantiation.networkHandle[handlerIndex]} {
-    initialize();
+    initialize(gpio);
 }
 
 
@@ -49,17 +52,17 @@ ara::core::Future<ara::nm::NetworkStateType> networkRequestedStateSetHandler(Net
     return promise.get_future();
 }
 
-IStateMachine *NetworkState_HandleImpl::createMachine(EthernetCommunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork) {
+IStateMachine *NetworkState_HandleImpl::createMachine(EthernetCommunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork, int gpio) {
     auto node = configReader[connector];
     auto cluster = configReader[node];
-    return new ara::nm::NMInstance(node, cluster, onStateChangeToNetwork);
+    return new ara::nm::NMInstance(gpio, node, cluster, onStateChangeToNetwork);
 }
 
 int NetworkState_HandleImpl::getEthernetConnectorNumber() {
     return handle.vlan.size();
 }
 
-void NetworkState_HandleImpl::initialize() {
+void NetworkState_HandleImpl::initialize(int gpio) {
     NetworkRequestedState.RegisterSetHandler([&](ara::nm::NetworkStateType newValue) {
         return networkRequestedStateSetHandler(this, newValue);
     });
@@ -68,7 +71,7 @@ void NetworkState_HandleImpl::initialize() {
         machines.emplace_back(machine);
         auto &last = machines.back();
         last -> handle = this;
-        last -> stateMachine = createMachine(handle.vlan[i], last -> machineStateChangeCallback);
+        last -> stateMachine = createMachine(handle.vlan[i], last -> machineStateChangeCallback, gpio);
     }
 
     for (auto &machine: machines) {

@@ -12,8 +12,8 @@
 
 namespace ara {
     namespace nm {
-        NMInstance::NMInstance(UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork)
-            : node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork) {
+        NMInstance::NMInstance(int gpio, UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork)
+            : node(node), cluster(cluster), onStateChangeToNetwork(onStateChangeToNetwork), socket(gpio) {
             socket.setServerAndBind(cluster->networkConfiguration.ipv4MulticastipAaddress);
             socket.setServerLoopBack();
 

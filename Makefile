@@ -1,6 +1,6 @@
 # Compiler settings
 CXX=g++
-CXXFLAGS=-std=c++11 -pthread -lz -lixwebsocket
+CXXFLAGS=-std=c++11 -pthread -lixwebsocket -lz
 
 # Directories
 SRC_DIR=src
@@ -29,21 +29,21 @@ PROTO_OBJ=$(patsubst include/%.cpp,$(OBJ_DIR)/%.o,$(PROTO_SRC))
 # Build rules
 all: $(TARGETS)
 
-main: $(MAIN_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+main: $(MAIN_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OBJ_DIR)/gpio.o
+	$(CXX) $^ -o $@ $(CXXFLAGS) 
 
-main1: $(MAIN1_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+main1: $(MAIN1_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OBJ_DIR)/gpio.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
-main2: $(MAIN2_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+main2: $(MAIN2_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OBJ_DIR)/gpio.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
-main3: $(MAIN3_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o
-	$(CXX) $(CXXFLAGS) $^ -o $@
+main3: $(MAIN3_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OJB_DIR)/gpio.o
+	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 $(OBJ_DIR)/%.o: **/%.cpp $(ARA_HEADERS)
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 clean:
 	rm -rf $(OBJ_DIR)

@@ -31,9 +31,9 @@ namespace ara {
             public:
             //Here 3 types of constructors are all provided, but mode is not settable (we'll only use kEventSingleThread)
             //we're not going to deal with kEvent and KPoll
-            NetworkState_HandleImpl(ara::com::InstanceIdentifier instanceIdentifier, int handlerIndex);
-            NetworkState_HandleImpl(ara::com::InstanceIdentifierContainer instanceIds, int handlerIndex);
-            NetworkState_HandleImpl(ara::core::InstanceSpecifier instanceSpec, int handlerIndex);
+            NetworkState_HandleImpl(ara::com::InstanceIdentifier instanceIdentifier, int handlerIndex, int gpio);
+            NetworkState_HandleImpl(ara::com::InstanceIdentifierContainer instanceIds, int handlerIndex, int gpio);
+            NetworkState_HandleImpl(ara::core::InstanceSpecifier instanceSpec, int handlerIndex, int gpio);
             ~NetworkState_HandleImpl();
 
             //the implementation also prohibit copy constructor and copy assignment

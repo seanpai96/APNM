@@ -4,7 +4,8 @@
 #include <cstdint>
 
 #include "../../../include/prototype.h"
-#include "../../../socket/socket.cpp"
+//#include "../../../socket/socket.cpp"
+#include "../../../gpio/socket.cpp"
 #include "CallbackTimer.cpp"
 #include "IStateMachine.hpp"
 #include "NetworkStateType.hpp"
@@ -28,7 +29,7 @@ namespace ara{
             Socket socket;
 
            public:
-            NMInstance(UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork);
+            NMInstance(int gpio, UdpNmNode *node, UdpNmCluster *cluster, std::function<void(bool)> &onStateChangeToNetwork);
             void StartInstance();
             void StopInstance();
             void setRequested(bool requested);
