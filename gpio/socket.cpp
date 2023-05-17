@@ -27,6 +27,7 @@ private:
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         io << 0;
     }
+
 public:
     int sock_Client,sock_Server;
     int broadcast = 1;
@@ -138,6 +139,12 @@ public:
     }
     void closeServerSocket(){
         close(sock_Server);
+    }
+    void closeSocket() {
+        clientLeaveGroup();
+        closeClientSocket();
+        closeServerSocket();
+        gpio.release_ios();
     }
     void setPort(int expect){
         port = expect;

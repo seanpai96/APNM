@@ -16,7 +16,7 @@ MAIN2_SRC=$(SRC_DIR)/main2.cpp
 MAIN3_SRC=$(SRC_DIR)/main3.cpp
 ARA_SRC=$(wildcard $(SRC_DIR)/ara/**/*.cpp)
 ARA_HEADERS=$(wildcard $(SRC_DIR)/ara/**/*.hpp)
-PROTO_SRC=$(wildcard include/**/*.cpp)
+PROTO_SRC=$(wildcard include/*.cpp)
 
 # Object files
 MAIN_OBJ=$(OBJ_DIR)/main.o

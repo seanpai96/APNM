@@ -150,6 +150,12 @@ public:
     void closeServerSocket(){
         close(sock_Server);
     }
+    void closeSocket() {
+        clientLeaveGroup();
+        closeClientSocket();
+        closeServerSocket();
+    }
+
     void setPort(int expect){
         port = expect;
     }
