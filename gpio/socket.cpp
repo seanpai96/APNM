@@ -19,10 +19,6 @@
 #include <thread>
 #include "gpio.hpp"
 
-#ifndef LED_PIN
-#define LED_PIN 16
-#endif
-
 class Socket{
 private:
     //blink the io, this will cause a 0.1s delay in current thread
@@ -39,7 +35,12 @@ public:
     int port = 11115;
     std::string IP;
 
-    GPIO_OUT gpio = GPIO_OUT({LED_PIN});
+    int led_pin;
+    GPIO_OUT gpio;
+
+    Socket(int led_pin): led_pin{led_pin}, gpio({led_pin}) {
+        ;
+    }
 
     int setServerAndBind(std::string addr){
         sock_Server = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -125,7 +126,7 @@ public:
             return 0;
         }else{
             std::cout << "receive broadcast from " << buffer[1]+'0' << std::endl;
-            blink(gpio[LED_PIN]);
+            blink(gpio[led_pin]);
             return 1;
         }
     }
