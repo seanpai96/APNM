@@ -72,8 +72,9 @@ int main() {
             {{}, {&connector3}}
     };
 
+    int led = 16;
     //in cluster 1
-    ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 1);
+    ara::nm::NetworkState_HandleImpl networkHandle(ara::com::InstanceIdentifier{}, 1, led);
 
     // initialize WSServer
     WSServer.setOnClientMessageCallback([&networkHandle](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg) {

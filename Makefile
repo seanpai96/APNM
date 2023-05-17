@@ -38,7 +38,7 @@ main1: $(MAIN1_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o 
 main2: $(MAIN2_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OBJ_DIR)/gpio.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
 
-main3: $(MAIN3_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OJB_DIR)/gpio.o
+main3: $(MAIN3_OBJ) $(ARA_OBJ) $(PROTO_OBJ) $(OBJ_DIR)/socket.o $(OBJ_DIR)/ws.o $(OBJ_DIR)/gpio.o
 	$(CXX) $^ -o $@ $(CXXFLAGS)
 
 $(OBJ_DIR)/%.o: **/%.cpp $(ARA_HEADERS)

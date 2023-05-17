@@ -72,11 +72,12 @@ int main() {
             {{}, {&connector3}}
     };
 
-
+    int led1 = 16;
+    int led2 = 17;
     //controls cluster 1
-    ara::nm::NetworkState_HandleImpl networkHandle0(ara::com::InstanceIdentifier{}, 0);
+    ara::nm::NetworkState_HandleImpl networkHandle0(ara::com::InstanceIdentifier{}, 0, led1);
     //controls cluster 2
-    ara::nm::NetworkState_HandleImpl networkHandle1(ara::com::InstanceIdentifier{}, 2);
+    ara::nm::NetworkState_HandleImpl networkHandle1(ara::com::InstanceIdentifier{}, 2, led2);
 
     //initialize WSServer
     WSServer.setOnClientMessageCallback([&networkHandle0, &networkHandle1](std::shared_ptr<ix::ConnectionState> connectionState, ix::WebSocket &webSocket, const ix::WebSocketMessagePtr &msg) {

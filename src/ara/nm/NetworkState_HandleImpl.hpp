@@ -44,8 +44,8 @@ namespace ara {
 	    ara::core::Vector<Machine *> machines;
 
             private:
-            void initialize();
-            IStateMachine *createMachine(EthernetCommunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork);
+            void initialize(int gpio);
+            IStateMachine *createMachine(EthernetCommunicationConnector *connector, std::function<void(bool)> &onStateChangeToNetwork, int gpio);
             int getEthernetConnectorNumber();
             
             NmNetworkHandle &handle; // = nmInstantiation.networkHandle[0];
