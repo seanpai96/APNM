@@ -97,9 +97,9 @@
             message : "temp",
             pageActive : true,
             pageActive2 : false,
-            ipFirst : "",
-            ipSecond : "",
-            ipThird : "",
+            ipFirst : "192.168.1.147:8080",
+            ipSecond : "192.168.1.150:8080",
+            ipThird : "192.168.1.163:8080",
             show: "all",
             undoneTasks: 0,
             doneTasks: 0, 
@@ -162,14 +162,6 @@
           }
           wst.onclose = () => {
             console.log('close connection');
-          }
-          if(this.connectSucceed == 3){
-            console.log("succeed")
-            this.pageActive = false
-            this.pageActive2 = true
-          }else{
-            let num = 3 - this.connectSucceed
-            alert('There are ' + num + ' ip errors')
           }
           this.pageActive = false
           this.pageActive2 = true
