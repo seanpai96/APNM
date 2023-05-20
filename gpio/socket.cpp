@@ -24,8 +24,10 @@ private:
     //blink the io, this will cause a 0.1s delay in current thread
     void blink(IO &io) {
         io << 1;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	io.flush();
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
         io << 0;
+	io.flush();
     }
 
 public:
