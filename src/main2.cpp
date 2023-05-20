@@ -19,14 +19,14 @@ void initCluster(UdpNmCluster &cluster, std::string multicastIp) {
     cluster.nmCbvPosition = 0;
     cluster.nmImmediateNmCycleTime = 3;
     cluster.nmImmediateNmTransmissions = 0;
-    cluster.nmMsgCycleTime = 5;
-    cluster.nmNetworkTimeout = 20;
+    cluster.nmMsgCycleTime = 2;
+    cluster.nmNetworkTimeout = 10;
     cluster.nmNidPosition = 1;
     cluster.nmPncParticipation = false;
-    cluster.nmRepeatMessageTime = 10;
+    cluster.nmRepeatMessageTime = 3; 
     cluster.nmUserDataLength = 0;
     cluster.nmUserDataOffset = 3;
-    cluster.nmWaitBusSleepTime = 20;
+    cluster.nmWaitBusSleepTime = 5; 
     cluster.pncClusterVectorLength = 0;
     cluster.networkConfiguration.ipv4MulticastipAaddress = multicastIp;
 }
