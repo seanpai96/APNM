@@ -121,8 +121,10 @@ public:
         int n =recvfrom(sock_Client, buffer, 4, 0, (struct sockaddr*)&client_Addr,&len);
 
         if(n == -1 || buffer[1] == node){
-            if (buffer[1] == node){
-                std::cout << "receive broadcast from myself which is " << buffer[1]+'0' << std::endl;
+            if (n == -1) {
+                // return 0;
+            } else if (buffer[1] == node) {
+                // std::cout << "receive broadcast from myself which is " << buffer[1]+'0' << std::endl;
             }
             return 0;
         }else{
