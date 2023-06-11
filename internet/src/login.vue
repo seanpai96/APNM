@@ -206,14 +206,6 @@ export default {
                 console.log(event.data)
                 this.handleJson(event.data)
             }
-            if (this.connectSucceed == 3) {
-                console.log("succeed")
-                this.pageActive = false
-                this.pageActive2 = true
-            } else {
-                let num = 3 - this.connectSucceed
-                alert('There are ' + num + ' ip errors')
-            }
             this.pageActive = false
             this.pageActive2 = true
             this.isActive = false
