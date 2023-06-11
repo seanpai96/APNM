@@ -1,6 +1,6 @@
 # Compiler settings
 CXX=g++
-CXXFLAGS=-std=c++11 -pthread -lixwebsocket -lz
+CXXFLAGS=-std=c++14 -pthread -lixwebsocket -lz
 
 # Directories
 SRC_DIR=src
